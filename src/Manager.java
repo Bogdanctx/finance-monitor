@@ -62,6 +62,12 @@ public class Manager {
 
                 break;
             }
+            case 2: // Manage accounts
+            {
+                AccountManager.getInstance().run();
+
+                break;
+            }
             case 0:
             {
                 shouldRun = false;
