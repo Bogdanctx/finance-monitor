@@ -12,6 +12,15 @@ public class Account {
         s_id++;
     }
 
+    @Override
+    public String toString() {
+        return "----------------- ACCOUNT -----------------\n" +
+                "| (ID: " + id + ") \n" +
+                "| Name: " + name + "\n" +
+                "| Balance: " + balance + "\n" +
+                "------------------------------------------";
+    }
+
     public void updateBalance(double amount) {
         balance += amount;
     }

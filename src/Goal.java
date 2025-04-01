@@ -12,6 +12,15 @@ public class Goal {
         s_id++;
     }
 
+    @Override
+    public String toString() {
+        return "------------------- GOAL -------------------\n" +
+                "| (ID: " + id + ") \n" +
+                "| Goal: " + goal + "\n" +
+                "| Value: " + value + "\n" +
+                "-------------------------------------------";
+    }
+
     public String getGoal() {
         return goal;
     }

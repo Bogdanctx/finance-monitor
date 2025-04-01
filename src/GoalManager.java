@@ -98,7 +98,7 @@ public class GoalManager extends Manager {
     private void showGoals() {
         System.out.println("Your goals:");
         for(Goal goal: goals) {
-            System.out.format("(ID: %1$s) %2$s - %3$f\n", goal.getId(), goal.getGoal(), goal.getValue());
+            System.out.println(goal);
         }
     }
 

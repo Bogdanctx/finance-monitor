@@ -100,7 +100,7 @@ public class AccountManager extends Manager {
     private void showAccounts() {
         System.out.println("Your accounts:");
         for(Account account: accounts) {
-            System.out.format("(ID: %1$s) %2$s - $%3$f\n", account.getId(), account.getName(), account.getBalance());
+            System.out.println(account);
         }
     }
 

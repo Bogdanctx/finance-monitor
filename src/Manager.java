@@ -49,6 +49,7 @@ public class Manager {
     protected void NVImenuList() {
         System.out.println("1. Manage goals");
         System.out.println("2. Manage accounts");
+        System.out.println("3. Manage transactions");
         System.out.println("0. Exit");
     }
 
@@ -65,6 +66,12 @@ public class Manager {
             case 2: // Manage accounts
             {
                 AccountManager.getInstance().run();
+
+                break;
+            }
+            case 3: // Manage transactions
+            {
+                TransactionManager.getInstance().run();
 
                 break;
             }
