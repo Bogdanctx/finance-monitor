@@ -25,7 +25,7 @@ public class GoalManager extends Manager {
     }
 
     @Override
-    protected void NVIrender() {
+    protected void render() {
         System.out.println("============ Manage Goals ============");
         displayMenu();
         System.out.println("======================================");

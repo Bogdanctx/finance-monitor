@@ -7,6 +7,7 @@ public class Transaction {
     private double amount;
     private static int s_id;
     private int id;
+    private Account account;
 
     public enum TYPE {
         Household,
@@ -21,12 +22,15 @@ public class Transaction {
         Other
     }
 
-    Transaction(double amount, TYPE type, String description) {
+    Transaction(double amount, TYPE type, String description, Account account) {
         this.amount = amount;
         this.type = type;
         this.description = description;
+        this.account = account;
         id = s_id;
         s_id++;
+
+        account.updateBalance(-amount);
     }
 
     static String getTypesString() {
@@ -46,6 +50,7 @@ public class Transaction {
                 "| Type: " + type.toString() + "\n" +
                 "| Amount: $" + amount + "\n" +
                 "| Description: " + description + "\n" +
+                "| Account: " + account.getName() + "\n" +
                 "--------------------------------------------";
     }
 

@@ -24,7 +24,7 @@ public class TransactionManager extends Manager {
     }
 
     @Override
-    protected void NVIrender() {
+    protected void render() {
         System.out.println("============ Manage Transactions ============");
         displayMenu();
         System.out.println("======================================");
@@ -53,7 +53,11 @@ public class TransactionManager extends Manager {
         System.out.print("Enter additional information: ");
         String info = scanner.next();
 
-        transactions.add(new Transaction(amount, Transaction.TYPE.values()[index], info));
+        System.out.print("Enter account ID [ " + AccountManager.getInstance().getAccountsString() + " ]: ");
+        int accountID = scanner.nextInt();
+
+        transactions.add(new Transaction(amount, Transaction.TYPE.values()[index],
+                                        info, AccountManager.getInstance().accounts.get(index)));
     }
 
     private void removeTransactions() {

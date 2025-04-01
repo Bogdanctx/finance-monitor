@@ -19,20 +19,22 @@ public class Manager {
     /////////////////////////////////////
     /// Purpose: Run a manager
     /////////////////////////////////////
-    public final void run() {
+    public void run() {
+        shouldRun = true;
+
         while (shouldRun) {
-            NVIrender();
+            render();
         }
     }
 
     ///////////////////////////////////////////////
-    /// Each class that inherits Manager can override NVIrender() in case of custom text printing
+    /// Each class that inherits Manager can override render() in case of custom text printing
     //////////////////////////////////////////////
-    protected void NVIrender() {
+    protected void render() {
         displayMenu();
     }
 
-    protected final void displayMenu() {
+    protected void displayMenu() {
         System.out.println("Select an action from the list below:");
 
         NVImenuList();

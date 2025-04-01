@@ -25,7 +25,7 @@ public class AccountManager extends Manager {
     }
 
     @Override
-    protected void NVIrender() {
+    protected void render() {
         System.out.println("============ Manage Accounts ============");
         displayMenu();
         System.out.println("======================================");
@@ -43,6 +43,16 @@ public class AccountManager extends Manager {
             case 4 -> showAccounts();
             case 0 -> shouldRun = false;
         }
+    }
+
+    public String getAccountsString() {
+        String accs = "";
+        int index = 0;
+        for (Account account: accounts) {
+            accs += "(" + index + ") " + account.getName() + " | ";
+            index++;
+        }
+        return accs.substring(0, accs.length() - 2);
     }
 
 
