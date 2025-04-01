@@ -89,6 +89,8 @@ public class GoalManager extends Manager<Goal> {
                         System.out.println("Unable to find goal with ID #" + id + ".");
                     }
 
+                    break;
+
                 }
                 case 4:
                 {
@@ -116,6 +118,7 @@ public class GoalManager extends Manager<Goal> {
 
         System.out.println("1. Update goal text");
         System.out.println("2. Update goal value");
+        System.out.print("Enter your choice: ");
         int choice;
         choice = scanner.nextInt();
 
