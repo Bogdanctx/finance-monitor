@@ -5,7 +5,18 @@ public class AccountManager extends Manager {
     List<Account> accounts = new ArrayList<Account>();
     private static AccountManager instance = null;
 
-    private AccountManager() {}
+    private AccountManager() {
+
+
+    }
+
+    public void testAccounts()
+    {
+        accounts.add(new Account("economii", 5000));
+        accounts.add(new Account("distractie", 2000));
+        accounts.add(new Account("urgenta", 1000));
+
+    }
 
     public static AccountManager getInstance() {
         if(instance == null) {

@@ -15,11 +15,17 @@ public class TransactionManager extends Manager {
         return instance;
     }
 
+    public void testTransaction() {
+
+
+    }
+
     @Override
     protected void NVImenuList() {
         System.out.println("1. Add a new transaction");
         System.out.println("2. Remove a transaction");
         System.out.println("3. Show transactions");
+        System.out.println("4. Show statistics");
         System.out.println("0. Exit");
     }
 
@@ -38,10 +44,30 @@ public class TransactionManager extends Manager {
             case 1 -> addTransactions();
             case 2 -> removeTransactions();
             case 3 -> showTransactions();
+            case 4 -> showStatistics();
             case 0 -> shouldRun = false;
         }
     }
 
+    private void showStatistics() {
+        Transaction.TYPE[] types = Transaction.TYPE.values();
+        int totalTransactions = transactions.size();
+
+        for(Transaction.TYPE type : types)
+        {
+            int count = 0;
+            double sum = 0;
+
+            for(Transaction transaction : transactions) {
+                if(transaction.getType() == type) {
+                    count++;
+                    sum += transaction.getAmount();
+                }
+            }
+
+            System.out.println(type.name() + " > " + count * 100 / totalTransactions + "%" + " | " + "$" + sum);
+        }
+    }
 
     private void addTransactions() {
         System.out.print("Enter transaction amount: ");

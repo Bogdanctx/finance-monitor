@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.List;
-
 public class Transaction {
     private TYPE type;
     private String description;
@@ -41,6 +38,10 @@ public class Transaction {
             index++;
         }
         return types.substring(0, types.length() - 2);
+    }
+
+    public double getAmount() {
+        return amount;
     }
 
     @Override
