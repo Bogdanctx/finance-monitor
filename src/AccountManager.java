@@ -1,14 +1,10 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class AccountManager extends Manager {
+    private final Scanner scanner = new Scanner(System.in);
     List<Account> accounts = new ArrayList<Account>();
-    private static AccountManager instance = null;
-
-    private AccountManager() {
-
-
-    }
 
     public void testAccounts()
     {
@@ -16,14 +12,6 @@ public class AccountManager extends Manager {
         accounts.add(new Account("distractie", 2000));
         accounts.add(new Account("urgenta", 1000));
 
-    }
-
-    public static AccountManager getInstance() {
-        if(instance == null) {
-            instance = new AccountManager();
-        }
-
-        return instance;
     }
 
     @Override
@@ -52,15 +40,18 @@ public class AccountManager extends Manager {
             case 2 -> removeAccounts();
             case 3 -> updateAccounts();
             case 4 -> showAccounts();
-            case 0 -> shouldRun = false;
+            case 0 -> {
+                shouldRun = false;
+                Service.clearConsole();
+            }
         }
     }
 
     public String getAccountsString() {
-        String accs = "";
+        StringBuilder accs = new StringBuilder();
         int index = 0;
         for (Account account: accounts) {
-            accs += "(" + index + ") " + account.getName() + " | ";
+            accs.append("(").append(index).append(") ").append(account.getName()).append(" | ");
             index++;
         }
         return accs.substring(0, accs.length() - 2);

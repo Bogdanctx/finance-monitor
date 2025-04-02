@@ -1,30 +1,21 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class TransactionManager extends Manager {
+    private final Scanner scanner = new Scanner(System.in);
     List<Transaction> transactions = new ArrayList<Transaction>();
-    private static TransactionManager instance = null;
-
-    private TransactionManager() {}
-
-    public static TransactionManager getInstance() {
-        if(instance == null) {
-            instance = new TransactionManager();
-        }
-
-        return instance;
-    }
 
     public void testTransaction() {
 
-        transactions.add(new Transaction(200, Transaction.TYPE.Education, "curs retele", AccountManager.getInstance().accounts.get(0)));
-        transactions.add(new Transaction(100, Transaction.TYPE.Entertainment, "cities skylines", AccountManager.getInstance().accounts.get(0)));
-        transactions.add(new Transaction(800, Transaction.TYPE.Education, "operatie genunchi", AccountManager.getInstance().accounts.get(2)));
-        transactions.add(new Transaction(80, Transaction.TYPE.Entertainment, "m-am distrat", AccountManager.getInstance().accounts.get(1)));
-        transactions.add(new Transaction(150, Transaction.TYPE.Education, "curs java 8", AccountManager.getInstance().accounts.get(0)));
-        transactions.add(new Transaction(1000, Transaction.TYPE.Other, "reparatie masina", AccountManager.getInstance().accounts.get(0)));
-        transactions.add(new Transaction(2000, Transaction.TYPE.Other, "masina de spalat", AccountManager.getInstance().accounts.get(0)));
-        transactions.add(new Transaction(170, Transaction.TYPE.Other, "gaze", AccountManager.getInstance().accounts.get(0)));
+        transactions.add(new Transaction(200, Transaction.TYPE.Education, "curs retele", ManagerFactory.getAccountManager().accounts.get(0)));
+        transactions.add(new Transaction(100, Transaction.TYPE.Entertainment, "cities skylines", ManagerFactory.getAccountManager().accounts.get(0)));
+        transactions.add(new Transaction(800, Transaction.TYPE.Education, "operatie genunchi", ManagerFactory.getAccountManager().accounts.get(2)));
+        transactions.add(new Transaction(80, Transaction.TYPE.Entertainment, "m-am distrat", ManagerFactory.getAccountManager().accounts.get(1)));
+        transactions.add(new Transaction(150, Transaction.TYPE.Education, "curs java 8", ManagerFactory.getAccountManager().accounts.get(0)));
+        transactions.add(new Transaction(1000, Transaction.TYPE.Other, "reparatie masina", ManagerFactory.getAccountManager().accounts.get(0)));
+        transactions.add(new Transaction(2000, Transaction.TYPE.Other, "masina de spalat", ManagerFactory.getAccountManager().accounts.get(0)));
+        transactions.add(new Transaction(170, Transaction.TYPE.Other, "gaze", ManagerFactory.getAccountManager().accounts.get(0)));
 
     }
 
@@ -53,7 +44,10 @@ public class TransactionManager extends Manager {
             case 2 -> removeTransactions();
             case 3 -> showTransactions();
             case 4 -> showStatistics();
-            case 0 -> shouldRun = false;
+            case 0 -> {
+                shouldRun = false;
+                Service.clearConsole();
+            }
         }
     }
 
@@ -62,7 +56,6 @@ public class TransactionManager extends Manager {
         int totalTransactions = transactions.size();
 
         System.out.println("You have " + totalTransactions + " transactions.");
-        System.out.println("[Transaction Type] > [x% (of all transactions)] | $[Total amount spent on that transaction type]");
 
         for(Transaction.TYPE type : types)
         {
@@ -76,7 +69,10 @@ public class TransactionManager extends Manager {
                 }
             }
 
-            System.out.println(type.name() + " > " + count * 100 / totalTransactions + "%" + " | " + "$" + sum);
+            if(count > 0) {
+                // 37% of transactions are related to Food and you've spent $500.
+                System.out.printf("%.2f%% transactions are related to %s and you've spent $%.2f%n", count * 100.0 / totalTransactions, type.name(), sum);
+            }
         }
     }
 
@@ -90,11 +86,11 @@ public class TransactionManager extends Manager {
         System.out.print("Enter additional information: ");
         String info = scanner.next();
 
-        System.out.print("Enter account ID [ " + AccountManager.getInstance().getAccountsString() + " ]: ");
+        System.out.print("Enter account ID [ " + ManagerFactory.getAccountManager().getAccountsString() + " ]: ");
         int accountID = scanner.nextInt();
 
         transactions.add(new Transaction(amount, Transaction.TYPE.values()[index],
-                                        info, AccountManager.getInstance().accounts.get(index)));
+                                        info, ManagerFactory.getAccountManager().accounts.get(accountID)));
     }
 
     private void removeTransactions() {

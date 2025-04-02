@@ -1,26 +1,20 @@
 import java.util.Scanner;
 
 public class Manager {
-    protected Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner = new Scanner(System.in);
     protected int menuOption;
     protected boolean shouldRun = true;
-    private static Manager instance = null;
 
-    protected Manager() {}
-
-    public static Manager getInstance() {
-        if (instance == null) {
-            instance = new Manager();
-        }
-        return instance;
+    public final void unitTest() {
+        ManagerFactory.getAccountManager().testAccounts();
+        ManagerFactory.getGoalManager().testGoals();
+        ManagerFactory.getTransactionManager().testTransaction();
     }
-
 
     /////////////////////////////////////
     /// Purpose: Run a manager
     /////////////////////////////////////
     public final void run() {
-        // final String os = System.getProperty("os.name");
         shouldRun = true;
 
         while (shouldRun) {
@@ -62,19 +56,19 @@ public class Manager {
         {
             case 1: // Manage goals
             {
-                GoalManager.getInstance().run();
+                ManagerFactory.getGoalManager().run();
 
                 break;
             }
             case 2: // Manage accounts
             {
-                AccountManager.getInstance().run();
+                ManagerFactory.getAccountManager().run();
 
                 break;
             }
             case 3: // Manage transactions
             {
-                TransactionManager.getInstance().run();
+                ManagerFactory.getTransactionManager().run();
 
                 break;
             }

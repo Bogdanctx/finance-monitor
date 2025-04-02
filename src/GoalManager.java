@@ -1,25 +1,19 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.reflect.Array;
+import java.util.*;
 
 public class GoalManager extends Manager {
-    List<Goal> goals = new ArrayList<Goal>();
-    private static GoalManager instance = null;
-
-    private GoalManager() {}
-
-    public static GoalManager getInstance() {
-        if(instance == null) {
-            instance = new GoalManager();
-        }
-
-        return instance;
-    }
+    private final Scanner scanner = new Scanner(System.in);
+    List<Goal> goals = new ArrayList<>();
 
     public void testGoals() {
 
-        goals.add(new Goal("masina", 200));
-        goals.add(new Goal("avion", 3000, AccountManager.getInstance().accounts.get(0)));
-        goals.add(new Goal("mayhem ball", 2500, AccountManager.getInstance().accounts.get(1)));
+        Goal g1 = new Goal("masina", 200);
+        Goal g2 = new Goal("avion", 3000, ManagerFactory.getAccountManager().accounts.get(0));
+        Goal g3 = new Goal("mayhem ball", 2500, ManagerFactory.getAccountManager().accounts.get(1));
+
+        goals.add(g1);
+        goals.add(g2);
+        goals.add(g3);
 
     }
 
@@ -48,7 +42,10 @@ public class GoalManager extends Manager {
             case 2 -> removeGoals();
             case 3 -> updateGoals();
             case 4 -> showGoals();
-            case 0 -> shouldRun = false;
+            case 0 -> {
+                shouldRun = false;
+                Service.clearConsole();
+            }
         }
     }
 
@@ -60,14 +57,14 @@ public class GoalManager extends Manager {
         double goalValue = scanner.nextDouble();
         scanner.nextLine();
 
-        System.out.print("Enter account ID [ (-1) No account | " + AccountManager.getInstance().getAccountsString() + " ]: ");
+        System.out.print("Enter account ID [ (-1) No account | " + ManagerFactory.getAccountManager().getAccountsString() + " ]: ");
         int accountID = scanner.nextInt();
 
         if(accountID == -1) { // No account attached to this goal
             goals.add(new Goal(goalText, goalValue, null));
         }
         else { // An account has been attached to this goal
-            goals.add(new Goal(goalText, goalValue, AccountManager.getInstance().accounts.get(accountID)));
+            goals.add(new Goal(goalText, goalValue, ManagerFactory.getAccountManager().accounts.get(accountID)));
         }
     }
 
@@ -113,7 +110,12 @@ public class GoalManager extends Manager {
 
     private void showGoals() {
         System.out.println("Your goals:");
-        for(Goal goal: goals) {
+
+        List<Goal> sortedGoals = new ArrayList<>(List.copyOf(goals));
+
+        sortedGoals.sort(Comparator.comparingDouble(Goal::getValue).reversed());
+
+        for(Goal goal: sortedGoals) {
             System.out.println(goal);
         }
     }

@@ -1,4 +1,4 @@
-public class Goal {
+public class Goal implements Comparable<Goal> {
     private String goal;
     private double value;
     private static int s_id = 0;
@@ -23,6 +23,11 @@ public class Goal {
     }
 
     @Override
+    public int compareTo(Goal o) {
+        return Double.compare(this.value, o.value);
+    }
+
+    @Override
     public String toString() {
 
         if(account != null) {
@@ -35,7 +40,7 @@ public class Goal {
         }
 
         double moneyInAccounts = 0;
-        for(Account account: AccountManager.getInstance().accounts) {
+        for(Account account: ManagerFactory.getAccountManager().accounts) {
             moneyInAccounts += account.getBalance();
         }
 
