@@ -19,7 +19,8 @@ public class Manager {
     /////////////////////////////////////
     /// Purpose: Run a manager
     /////////////////////////////////////
-    public void run() {
+    public final void run() {
+        // final String os = System.getProperty("os.name");
         shouldRun = true;
 
         while (shouldRun) {

@@ -15,6 +15,14 @@ public class GoalManager extends Manager {
         return instance;
     }
 
+    public void testGoals() {
+
+        goals.add(new Goal("masina", 200));
+        goals.add(new Goal("avion", 3000, AccountManager.getInstance().accounts.get(0)));
+        goals.add(new Goal("mayhem ball", 2500, AccountManager.getInstance().accounts.get(1)));
+
+    }
+
     @Override
     protected void NVImenuList() {
         System.out.println("1. Add a new goal");
@@ -52,7 +60,15 @@ public class GoalManager extends Manager {
         double goalValue = scanner.nextDouble();
         scanner.nextLine();
 
-        goals.add(new Goal(goalText, goalValue));
+        System.out.print("Enter account ID [ (-1) No account | " + AccountManager.getInstance().getAccountsString() + " ]: ");
+        int accountID = scanner.nextInt();
+
+        if(accountID == -1) { // No account attached to this goal
+            goals.add(new Goal(goalText, goalValue, null));
+        }
+        else { // An account has been attached to this goal
+            goals.add(new Goal(goalText, goalValue, AccountManager.getInstance().accounts.get(accountID)));
+        }
     }
 
     private void removeGoals() {

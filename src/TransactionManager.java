@@ -17,6 +17,14 @@ public class TransactionManager extends Manager {
 
     public void testTransaction() {
 
+        transactions.add(new Transaction(200, Transaction.TYPE.Education, "curs retele", AccountManager.getInstance().accounts.get(0)));
+        transactions.add(new Transaction(100, Transaction.TYPE.Entertainment, "cities skylines", AccountManager.getInstance().accounts.get(0)));
+        transactions.add(new Transaction(800, Transaction.TYPE.Education, "operatie genunchi", AccountManager.getInstance().accounts.get(2)));
+        transactions.add(new Transaction(80, Transaction.TYPE.Entertainment, "m-am distrat", AccountManager.getInstance().accounts.get(1)));
+        transactions.add(new Transaction(150, Transaction.TYPE.Education, "curs java 8", AccountManager.getInstance().accounts.get(0)));
+        transactions.add(new Transaction(1000, Transaction.TYPE.Other, "reparatie masina", AccountManager.getInstance().accounts.get(0)));
+        transactions.add(new Transaction(2000, Transaction.TYPE.Other, "masina de spalat", AccountManager.getInstance().accounts.get(0)));
+        transactions.add(new Transaction(170, Transaction.TYPE.Other, "gaze", AccountManager.getInstance().accounts.get(0)));
 
     }
 
@@ -52,6 +60,9 @@ public class TransactionManager extends Manager {
     private void showStatistics() {
         Transaction.TYPE[] types = Transaction.TYPE.values();
         int totalTransactions = transactions.size();
+
+        System.out.println("You have " + totalTransactions + " transactions.");
+        System.out.println("[Transaction Type] > [x% (of all transactions)] | $[Total amount spent on that transaction type]");
 
         for(Transaction.TYPE type : types)
         {

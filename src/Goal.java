@@ -3,6 +3,7 @@ public class Goal {
     private double value;
     private static int s_id = 0;
     private int id;
+    private Account account = null;
 
     Goal(String goal, double value) {
         this.goal = goal;
@@ -12,13 +13,39 @@ public class Goal {
         s_id++;
     }
 
+    Goal(String goal, double value, Account account) {
+        this.goal = goal;
+        this.value = value;
+        this.account = account;
+
+        id = s_id;
+        s_id++;
+    }
+
     @Override
     public String toString() {
+
+        if(account != null) {
+            return "------------------- GOAL -------------------\n" +
+                    "| (ID: " + id + ") \n" +
+                    "| Goal: " + goal + "\n" +
+                    "| Target: $" + account.getBalance() + " / $" + value + "\n" +
+                    "| Attached account: " + account.getName() + "\n" +
+                    "-------------------------------------------";
+        }
+
+        double moneyInAccounts = 0;
+        for(Account account: AccountManager.getInstance().accounts) {
+            moneyInAccounts += account.getBalance();
+        }
+
         return "------------------- GOAL -------------------\n" +
                 "| (ID: " + id + ") \n" +
                 "| Goal: " + goal + "\n" +
-                "| Value: " + value + "\n" +
+                "| Target: $" + moneyInAccounts + " / $" + value + " ($" + moneyInAccounts + " from all accounts)\n" +
+                "| Attached account: No account attached\n" +
                 "-------------------------------------------";
+
     }
 
     public String getGoal() {
