@@ -28,11 +28,14 @@ public class Transaction {
         s_id++;
 
         account.updateBalance(-amount);
+
+        Service.registerLog("new_transaction#amount=" + amount + ";type=" + type.toString() + ";description=" + description + ";account=" + account.getName());
     }
 
     public String getDescription() {
         return description;
     }
+
     public Account getAccount() {
         return account;
     }

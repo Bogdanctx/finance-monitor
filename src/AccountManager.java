@@ -83,7 +83,9 @@ public class AccountManager extends Manager {
 
         for(int i = 0; i < accounts.size(); i++) {
             if(accounts.get(i).getId() == id) {
-                accounts.remove(i);
+                Service.registerLog("delete_account#name=" + accounts.get(i).getName());
+
+                accounts.removeIf(account -> account.getId() == id);
                 wasDeleted = true;
             }
         }

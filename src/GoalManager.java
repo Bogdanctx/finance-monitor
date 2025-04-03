@@ -81,7 +81,10 @@ public class GoalManager extends Manager {
 
         for(int i = 0; i < goals.size(); i++) {
             if(goals.get(i).getId() == id) {
+                Service.registerLog("delete_goal#description=" + goals.get(i).getGoal());
+
                 goals.remove(i);
+
                 wasDeleted = true;
             }
         }

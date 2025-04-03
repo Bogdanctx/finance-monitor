@@ -100,6 +100,28 @@ public class TransactionManager extends Manager {
 
     private void removeTransactions() {
         showTransactions();
+
+        System.out.println("Enter the ID of the transaction you would like to remove: ");
+        int id = scanner.nextInt();
+
+        boolean wasDeleted = false;
+
+        for(int i = 0; i < transactions.size(); i++) {
+            if(transactions.get(i).getId() == id) {
+                Service.registerLog("delete_transaction#id=" + transactions.get(i).getId());
+
+                transactions.remove(i);
+
+                wasDeleted = true;
+            }
+        }
+
+        if(wasDeleted) {
+            System.out.println("The transaction with ID #" + id + " was deleted.");
+        }
+        else {
+            System.out.println("Unable to find transaction with ID #" + id + ".");
+        }
     }
 
     private void showTransactions() {

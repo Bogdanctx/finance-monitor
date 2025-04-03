@@ -11,6 +11,8 @@ public class Goal implements Comparable<Goal> {
 
         id = s_id;
         s_id++;
+
+        Service.registerLog("new_goal#goal=" + this.goal + ";value=" + this.value);
     }
 
     Goal(String goal, double value, Account account) {
@@ -20,6 +22,8 @@ public class Goal implements Comparable<Goal> {
 
         id = s_id;
         s_id++;
+
+        Service.registerLog("new_goal#goal=" + this.goal + ";value=" + this.value + ";account=" + this.account.getName());
     }
 
     @Override
@@ -60,7 +64,10 @@ public class Goal implements Comparable<Goal> {
     public String getGoal() {
         return goal;
     }
+
     public void setGoal(String goal) {
+        Service.registerLog("set_goal#old_goal=" + this.goal + ";new=" + goal);
+
         this.goal = goal;
     }
 
@@ -68,11 +75,15 @@ public class Goal implements Comparable<Goal> {
     public double getValue() {
         return value;
     }
+
     public void setValue(double value) {
+        Service.registerLog("new_value#old=" + this.value + ";new=" + this.value);
+
         this.value = value;
     }
 
     public int getId() {
         return id;
     }
+
 }
