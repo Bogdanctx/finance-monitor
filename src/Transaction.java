@@ -30,6 +30,13 @@ public class Transaction {
         account.updateBalance(-amount);
     }
 
+    public String getDescription() {
+        return description;
+    }
+    public Account getAccount() {
+        return account;
+    }
+
     static String getTypesString() {
         String types = "";
         int index = 0;

@@ -51,6 +51,11 @@ public class TransactionManager extends Manager {
         }
     }
 
+    @Override
+    public void export(Visitor visitor) {
+        visitor.visitTransactionManager(this);
+    }
+
     private void showStatistics() {
         Transaction.TYPE[] types = Transaction.TYPE.values();
         int totalTransactions = transactions.size();

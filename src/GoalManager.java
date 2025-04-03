@@ -49,6 +49,10 @@ public class GoalManager extends Manager {
         }
     }
 
+    public void export(Visitor visitor) {
+        visitor.visitGoalManager(this);
+    }
+
     private void addGoals() {
         System.out.print("Enter goal: ");
         String goalText = scanner.next();

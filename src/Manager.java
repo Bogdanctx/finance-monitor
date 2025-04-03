@@ -32,12 +32,17 @@ public class Manager {
     protected void displayMenu() {
         System.out.println("Select an action from the list below:");
 
+        // Non Virtual Interface
         NVImenuList();
 
         System.out.print("Enter your choice: ");
         menuOption = scanner.nextInt();
 
         handleMenuOption(menuOption);
+    }
+
+    public void export(Visitor visitor) {
+        visitor.visitManager();
     }
 
     /////////////////////////////////////////////////////////////
@@ -47,6 +52,7 @@ public class Manager {
         System.out.println("1. Manage goals");
         System.out.println("2. Manage accounts");
         System.out.println("3. Manage transactions");
+        System.out.println("4. Generate a report");
         System.out.println("0. Exit");
     }
 
@@ -69,6 +75,12 @@ public class Manager {
             case 3: // Manage transactions
             {
                 ManagerFactory.getTransactionManager().run();
+
+                break;
+            }
+            case 4: // Generate a report
+            {
+                ManagerFactory.getReportManager().run();
 
                 break;
             }

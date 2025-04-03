@@ -53,6 +53,10 @@ public class Goal implements Comparable<Goal> {
 
     }
 
+    public Account getAccount() {
+        return account;
+    }
+
     public String getGoal() {
         return goal;
     }

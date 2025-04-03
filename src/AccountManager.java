@@ -45,6 +45,7 @@ public class AccountManager extends Manager {
                 Service.clearConsole();
             }
         }
+
     }
 
     public String getAccountsString() {
@@ -55,6 +56,10 @@ public class AccountManager extends Manager {
             index++;
         }
         return accs.substring(0, accs.length() - 2);
+    }
+
+    public void export(Visitor visitor) {
+        visitor.visitAccountManager(this);
     }
 
 
