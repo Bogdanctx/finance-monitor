@@ -2,6 +2,10 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -12,6 +16,7 @@ public class Service {
     private static File logs = null;
     private final static String os = System.getProperty("os.name").toLowerCase();
 
+
     static {
         logs = createFile("LOGS.csv");
 
@@ -21,6 +26,24 @@ public class Service {
     }
 
     private Service() {}
+
+    public static void loadDataFromDatabase() {
+        ResultSet rs = Database.selectFrom("accounts", "*");
+
+        try {
+            while(rs.next()) {
+                int id = rs.getInt(1);
+                String name = rs.getString(2);
+                double balance = rs.getDouble(3);
+                ManagerFactory.getAccountManager().accounts.add(new Account(id, name, balance));
+            }
+
+        }
+        catch(Exception e) {
+            System.out.println("[ERROR] > " + e);
+        }
+    }
+
 
     public static void clearConsole() {
         try {

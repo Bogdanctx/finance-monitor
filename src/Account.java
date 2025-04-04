@@ -1,19 +1,14 @@
 public class Account {
     private String name;
     private double balance;
-    private static int s_id = 0;
     private double initialBalance;
-    private final int id;
+    private int id;
 
-    Account(String accountName, double balance) {
+    Account(int id, String accountName, double balance) {
         this.name = accountName;
         this.balance = balance;
         this.initialBalance = balance;
-
-        Service.registerLog("new_account#name=" + accountName + ";balance=" + balance);
-
-        id = s_id;
-        s_id++;
+        this.id = id;
     }
 
     @Override

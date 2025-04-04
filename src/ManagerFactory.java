@@ -3,6 +3,7 @@ public class ManagerFactory {
     private static final AccountManager accountManager = new AccountManager();
     private static final TransactionManager transactionManager = new TransactionManager();
     private static final ReportManager reportManager = new ReportManager();
+    private static final Manager manager = new Manager();
 
     public static GoalManager getGoalManager() {
         return goalManager;
@@ -21,6 +22,6 @@ public class ManagerFactory {
     }
 
     public static Manager getMainManager() {
-        return new Manager();
+        return manager;
     }
 }

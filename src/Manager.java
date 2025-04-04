@@ -1,3 +1,4 @@
+import java.sql.ResultSet;
 import java.util.Scanner;
 
 public class Manager {
@@ -6,9 +7,9 @@ public class Manager {
     protected boolean shouldRun = true;
 
     public final void unitTest() {
-        ManagerFactory.getAccountManager().testAccounts();
-        ManagerFactory.getGoalManager().testGoals();
-        ManagerFactory.getTransactionManager().testTransaction();
+        //ManagerFactory.getAccountManager().testAccounts();
+        //ManagerFactory.getGoalManager().testGoals();
+        //ManagerFactory.getTransactionManager().testTransaction();
     }
 
     /////////////////////////////////////

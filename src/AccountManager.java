@@ -1,3 +1,6 @@
+import javax.xml.crypto.Data;
+import java.sql.Connection;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -8,9 +11,9 @@ public class AccountManager extends Manager {
 
     public void testAccounts()
     {
-        accounts.add(new Account("economii", 5000));
-        accounts.add(new Account("distractie", 2000));
-        accounts.add(new Account("urgenta", 1000));
+        //accounts.add(new Account("economii", 5000));
+        //accounts.add(new Account("distractie", 2000));
+        //accounts.add(new Account("urgenta", 1000));
 
     }
 
@@ -71,7 +74,12 @@ public class AccountManager extends Manager {
         double accountBalance = scanner.nextDouble();
         scanner.nextLine();
 
-        accounts.add(new Account(accountName, accountBalance));
+        String values = String.format("('%s', %.2f, %.2f)", accountName, accountBalance, accountBalance);
+        int id = Database.insertIntoDatabase("accounts", "(name, balance, initial_balance)", values);
+
+        accounts.add(new Account(id, accountName, accountBalance));
+        Service.registerLog("new_account#name=" + accountName + ";balance=" + accountBalance);
+
     }
 
     private void removeAccounts() {
@@ -85,7 +93,10 @@ public class AccountManager extends Manager {
             if(accounts.get(i).getId() == id) {
                 Service.registerLog("delete_account#name=" + accounts.get(i).getName());
 
-                accounts.removeIf(account -> account.getId() == id);
+
+                Database.deleteRow("accounts", "name = '" + accounts.get(i).getName() + "'");
+                accounts.remove(i);
+
                 wasDeleted = true;
             }
         }
