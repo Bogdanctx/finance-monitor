@@ -28,6 +28,8 @@ public class Database {
         return rs;
     }
 
+    /// This function inserts a row into a table and then return the last ID used as primary key for that row
+    /// INSERT INTO @table @valuesOrder VALUES @values;
     public static int insertIntoDatabase(String table, String valuesOrder, String values) {
         int generatedId = 0;
 
@@ -47,6 +49,18 @@ public class Database {
         }
 
         return generatedId;
+    }
+
+    public static void updateRow(String table, String newValues, String whereClause) {
+        try {
+            String sql = "UPDATE " + table + " SET " + newValues + " WHERE " + whereClause + ";";
+
+            Statement st = connection.createStatement();
+            st.executeUpdate(sql);
+
+        } catch (SQLException e) {
+            System.out.println("[ERROR] > " + e);
+        }
     }
 
     public static void deleteRow(String table, String whereClause) {

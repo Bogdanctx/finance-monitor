@@ -88,6 +88,7 @@ public class Manager {
             case 0:
             {
                 shouldRun = false;
+
                 break;
             }
         }

@@ -79,7 +79,6 @@ public class AccountManager extends Manager {
 
         accounts.add(new Account(id, accountName, accountBalance));
         Service.registerLog("new_account#name=" + accountName + ";balance=" + accountBalance);
-
     }
 
     private void removeAccounts() {
@@ -151,6 +150,9 @@ public class AccountManager extends Manager {
                 String newAccountName = scanner.next();
 
                 account.setName(newAccountName);
+
+                Database.updateRow("accounts", "name = '" + newAccountName + "'", "id = " + account.getId());
+
                 wasUpdated = true;
 
                 break;
@@ -161,6 +163,9 @@ public class AccountManager extends Manager {
                 double newFunds = scanner.nextDouble();
 
                 account.updateBalance(newFunds);
+
+                Database.updateRow("accounts", "balance = " + account.getBalance() + newFunds, "id = " + account.getId());
+
                 wasUpdated = true;
 
                 break;
@@ -171,6 +176,9 @@ public class AccountManager extends Manager {
                 double newBalance = scanner.nextDouble();
 
                 account.setBalance(newBalance);
+
+                Database.updateRow("accounts", "balance = " + newBalance + ", initial_balance = " + newBalance, "id = " + account.getId());
+
                 wasUpdated = true;
 
                 break;
