@@ -92,7 +92,6 @@ public class AccountManager extends Manager {
             if(accounts.get(i).getId() == id) {
                 Service.registerLog("delete_account#name=" + accounts.get(i).getName());
 
-
                 Database.deleteRow("accounts", "name = '" + accounts.get(i).getName() + "'");
                 accounts.remove(i);
 

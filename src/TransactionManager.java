@@ -74,22 +74,22 @@ public class TransactionManager extends Manager {
 
         System.out.print("Enter transaction type [ " + Transaction.getTypesString() + "]: ");
         int index = scanner.nextInt();
+        Transaction.TYPE type = Transaction.TYPE.values()[index];
 
         System.out.print("Enter additional information: ");
-        String info = scanner.next();
+        String description = scanner.next();
 
         System.out.print("Enter account ID [ " + ManagerFactory.getAccountManager().getAccountsString() + " ]: ");
-        int accountID = scanner.nextInt();
+        int account_id = scanner.nextInt();
 
-
-        int transactionId = Database.insertIntoDatabase("transactions", "(description, account_id, amount)",
-                                                        String.format("('%s',%d,%.2f)", info, accountID, amount));
-        transactions.add(new Transaction(transactionId, amount, Transaction.TYPE.values()[index], info, accountID));
+        int transactionId = Database.insertIntoDatabase("transactions", "(type,amount,description,account_id)",
+                                                        String.format("('%s',%.2f,'%s',%d)", type.toString(), amount, description, account_id));
+        transactions.add(new Transaction(transactionId, type, amount, description, account_id));
 
         Service.registerLog("new_transaction#amount=" + amount +
                             ";type=" + Transaction.TYPE.values()[index].toString() +
-                            ";description=" + info +
-                            ";account=" + ManagerFactory.getAccountManager().getAccountById(accountID).getName());
+                            ";description=" + description +
+                            ";account=" + ManagerFactory.getAccountManager().getAccountById(account_id).getName());
     }
 
     private void removeTransactions() {

@@ -1,13 +1,13 @@
 public class Goal implements Comparable<Goal> {
+    private int id;
     private String goal;
     private double value;
-    private int id;
-    private int accountId = -1;
+    private int account_id = -1;
 
-    Goal(int id, String goal, double value, int accountId) {
+    Goal(int id, String goal, double value, int account_id) {
         this.goal = goal;
         this.value = value;
-        this.accountId = accountId;
+        this.account_id = account_id;
         this.id = id;
     }
 
@@ -19,8 +19,8 @@ public class Goal implements Comparable<Goal> {
     @Override
     public String toString() {
 
-        if(accountId != -1) {
-            Account attachedAccount = ManagerFactory.getAccountManager().getAccountById(accountId);
+        if(account_id != -1) {
+            Account attachedAccount = ManagerFactory.getAccountManager().getAccountById(account_id);
 
             return "------------------- GOAL -------------------\n" +
                     "| (ID: " + id + ") \n" +
@@ -45,7 +45,7 @@ public class Goal implements Comparable<Goal> {
     }
 
     public int getAccountId() {
-        return accountId;
+        return account_id;
     }
 
     public String getGoal() {

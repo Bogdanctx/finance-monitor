@@ -11,18 +11,18 @@ CREATE TABLE accounts (
 CREATE TABLE goals (
     id INT AUTO_INCREMENT PRIMARY KEY,
     goal TEXT NOT NULL,
-    account_id INT DEFAULT NULL,
     value DECIMAL(10,2) NOT NULL,
+    account_id INT DEFAULT NULL,
 
     FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE
 );
 
 CREATE TABLE transactions (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    account_id INT DEFAULT NULL,
     type ENUM('Household', 'Utilities', 'Shopping', 'Essentials', 'Transportation', 'Food', 'Health', 'Education', 'Entertainment', 'Other') NOT NULL,
     amount DECIMAL(10,2) NOT NULL,
     description TEXT,
+    account_id INT DEFAULT NULL,
 
     FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE
 );

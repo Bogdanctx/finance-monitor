@@ -73,7 +73,7 @@ public class Service {
                 double amount = rs.getDouble(4);
                 String description = rs.getString(5);
 
-                ManagerFactory.getTransactionManager().transactions.add(new Transaction(id, amount, type, description, accountId));
+                ManagerFactory.getTransactionManager().transactions.add(new Transaction(id, type, amount, description, accountId));
             }
         } catch (Exception e) {
             e.printStackTrace();

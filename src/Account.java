@@ -1,13 +1,13 @@
 public class Account {
+    private int id;
     private String name;
     private double balance;
-    private double initialBalance;
-    private int id;
+    private double initial_balance;
 
     Account(int id, String accountName, double balance) {
         this.name = accountName;
         this.balance = balance;
-        this.initialBalance = balance;
+        this.initial_balance = balance;
         this.id = id;
     }
 
@@ -17,12 +17,12 @@ public class Account {
                 "| (ID: " + id + ") \n" +
                 "| Name: " + name + "\n" +
                 "| Balance: " + balance + "\n" +
-                "| Initial Balance: " + initialBalance + "\n" +
+                "| Initial Balance: " + initial_balance + "\n" +
                 "------------------------------------------";
     }
 
     public double getInitialBalance() {
-        return initialBalance;
+        return initial_balance;
     }
 
     public void updateBalance(double amount) {
@@ -38,7 +38,7 @@ public class Account {
     public void setBalance(double balance) {
         Service.registerLog("set_balance#old=" + this.balance + ";new=" + balance);
         this.balance = balance;
-        this.initialBalance = balance;
+        this.initial_balance = balance;
     }
 
     public String getName() {

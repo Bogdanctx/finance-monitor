@@ -1,9 +1,9 @@
 public class Transaction {
-    private TYPE type;
-    private String description;
-    private double amount;
     private int id;
-    private int accountId;
+    private TYPE type;
+    private double amount;
+    private String description;
+    private int account_id;
 
     public enum TYPE {
         Household,
@@ -18,14 +18,14 @@ public class Transaction {
         Other
     }
 
-    Transaction(int id, double amount, TYPE type, String description, int accountId) {
+    Transaction(int id, TYPE type, double amount, String description, int account_id) {
         this.amount = amount;
         this.type = type;
         this.description = description;
-        this.accountId = accountId;
+        this.account_id = account_id;
         this.id = id;
 
-        Account attachedAccount = ManagerFactory.getAccountManager().getAccountById(accountId);
+        Account attachedAccount = ManagerFactory.getAccountManager().getAccountById(account_id);
         attachedAccount.updateBalance(-amount);
 
     }
@@ -35,7 +35,7 @@ public class Transaction {
     }
 
     public int getAccountId() {
-        return accountId;
+        return account_id;
     }
 
     static String getTypesString() {
@@ -59,7 +59,7 @@ public class Transaction {
                 "| Type: " + type.toString() + "\n" +
                 "| Amount: $" + amount + "\n" +
                 "| Description: " + description + "\n" +
-                "| Account: " + ManagerFactory.getAccountManager().getAccountById(accountId).getName() + "\n" +
+                "| Account: " + ManagerFactory.getAccountManager().getAccountById(account_id).getName() + "\n" +
                 "--------------------------------------------";
     }
 
