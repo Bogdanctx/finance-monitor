@@ -1,12 +1,8 @@
-import javax.xml.crypto.Data;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -28,20 +24,26 @@ public class Service {
 
     private Service() {}
 
-    public static void loadDataFromDatabase() {
-        try {
-            ResultSet rs = Database.selectFrom("accounts", "*");
+    private static void loadAccountsFromDB() {
+        ResultSet rs = Database.selectFrom("accounts", "*");
 
-            while(rs.next()) {
+        try {
+            while (rs.next()) {
                 int id = rs.getInt(1);
                 String name = rs.getString(2);
                 double balance = rs.getDouble(3);
 
                 ManagerFactory.getAccountManager().accounts.add(new Account(id, name, balance));
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-            rs = Database.selectFrom("goals", "*");
+    private static void loadGoalsFromDB() {
+        ResultSet rs = Database.selectFrom("goals", "*");
 
+        try {
             while (rs.next()) {
                 int id = rs.getInt(1);
                 String goalDesc = rs.getString(2);
@@ -49,18 +51,40 @@ public class Service {
                 double value = rs.getDouble(4);
 
                 // If accountId is NULL
-                if(accountId == 0) {
+                if (accountId == 0) {
                     accountId = -1;
                 }
 
                 ManagerFactory.getGoalManager().goals.add(new Goal(id, goalDesc, value, accountId));
             }
-        }
-        catch(Exception e) {
-            System.out.println("[ERROR] > " + e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
+    private static void loadTransactionsFromDB() {
+        ResultSet rs = Database.selectFrom("transactions", "*");
+
+        try {
+            while (rs.next()) {
+                int id = rs.getInt(1);
+                int accountId = rs.getInt(2);
+                Transaction.TYPE type = Transaction.TYPE.valueOf(rs.getString(3));
+                double amount = rs.getDouble(4);
+                String description = rs.getString(5);
+
+                ManagerFactory.getTransactionManager().transactions.add(new Transaction(id, amount, type, description, accountId));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void loadDataFromDatabase() {
+        loadAccountsFromDB();
+        loadGoalsFromDB();
+        loadTransactionsFromDB();
+    }
 
     public static void clearConsole() {
         try {

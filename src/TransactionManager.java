@@ -6,19 +6,6 @@ public class TransactionManager extends Manager {
     private final Scanner scanner = new Scanner(System.in);
     List<Transaction> transactions = new ArrayList<Transaction>();
 
-    public void testTransaction() {
-
-        transactions.add(new Transaction(200, Transaction.TYPE.Education, "curs retele", ManagerFactory.getAccountManager().accounts.get(0)));
-        transactions.add(new Transaction(100, Transaction.TYPE.Entertainment, "cities skylines", ManagerFactory.getAccountManager().accounts.get(0)));
-        transactions.add(new Transaction(800, Transaction.TYPE.Education, "operatie genunchi", ManagerFactory.getAccountManager().accounts.get(2)));
-        transactions.add(new Transaction(80, Transaction.TYPE.Entertainment, "m-am distrat", ManagerFactory.getAccountManager().accounts.get(1)));
-        transactions.add(new Transaction(150, Transaction.TYPE.Education, "curs java 8", ManagerFactory.getAccountManager().accounts.get(0)));
-        transactions.add(new Transaction(1000, Transaction.TYPE.Other, "reparatie masina", ManagerFactory.getAccountManager().accounts.get(0)));
-        transactions.add(new Transaction(2000, Transaction.TYPE.Other, "masina de spalat", ManagerFactory.getAccountManager().accounts.get(0)));
-        transactions.add(new Transaction(170, Transaction.TYPE.Other, "gaze", ManagerFactory.getAccountManager().accounts.get(0)));
-
-    }
-
     @Override
     protected void NVImenuList() {
         System.out.println("1. Add a new transaction");
@@ -94,8 +81,15 @@ public class TransactionManager extends Manager {
         System.out.print("Enter account ID [ " + ManagerFactory.getAccountManager().getAccountsString() + " ]: ");
         int accountID = scanner.nextInt();
 
-        transactions.add(new Transaction(amount, Transaction.TYPE.values()[index],
-                                        info, ManagerFactory.getAccountManager().accounts.get(accountID)));
+
+        int transactionId = Database.insertIntoDatabase("transactions", "(description, account_id, amount)",
+                                                        String.format("('%s',%d,%.2f)", info, accountID, amount));
+        transactions.add(new Transaction(transactionId, amount, Transaction.TYPE.values()[index], info, accountID));
+
+        Service.registerLog("new_transaction#amount=" + amount +
+                            ";type=" + Transaction.TYPE.values()[index].toString() +
+                            ";description=" + info +
+                            ";account=" + ManagerFactory.getAccountManager().getAccountById(accountID).getName());
     }
 
     private void removeTransactions() {
@@ -110,6 +104,7 @@ public class TransactionManager extends Manager {
             if(transactions.get(i).getId() == id) {
                 Service.registerLog("delete_transaction#id=" + transactions.get(i).getId());
 
+                Database.deleteRow("transactions", "id = " + transactions.get(i).getId());
                 transactions.remove(i);
 
                 wasDeleted = true;

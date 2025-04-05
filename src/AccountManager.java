@@ -1,6 +1,3 @@
-import javax.xml.crypto.Data;
-import java.sql.Connection;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -8,14 +5,6 @@ import java.util.Scanner;
 public class AccountManager extends Manager {
     private final Scanner scanner = new Scanner(System.in);
     List<Account> accounts = new ArrayList<Account>();
-
-    public void testAccounts()
-    {
-        //accounts.add(new Account("economii", 5000));
-        //accounts.add(new Account("distractie", 2000));
-        //accounts.add(new Account("urgenta", 1000));
-
-    }
 
     public Account getAccountById(int id) {
         for(Account account : accounts) {

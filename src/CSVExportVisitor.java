@@ -31,7 +31,10 @@ public class CSVExportVisitor implements Visitor {
 
         for(Transaction t: transactionManager.transactions)
         {
-            lines.add(t.getAmount() + "," + t.getType().toString() + "," + t.getDescription() + "," + t.getAccount().getName());
+            lines.add(t.getAmount() + "," +
+                    t.getType().toString() + "," +
+                    t.getDescription() + "," +
+                    ManagerFactory.getAccountManager().getAccountById(t.getAccountId()).getName());
         }
 
         Service.writeToFile(file, lines);

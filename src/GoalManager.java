@@ -1,5 +1,7 @@
-import java.lang.reflect.Array;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Scanner;
 
 public class GoalManager extends Manager {
     private final Scanner scanner = new Scanner(System.in);

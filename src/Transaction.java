@@ -2,9 +2,8 @@ public class Transaction {
     private TYPE type;
     private String description;
     private double amount;
-    private static int s_id;
     private int id;
-    private Account account;
+    private int accountId;
 
     public enum TYPE {
         Household,
@@ -19,25 +18,24 @@ public class Transaction {
         Other
     }
 
-    Transaction(double amount, TYPE type, String description, Account account) {
+    Transaction(int id, double amount, TYPE type, String description, int accountId) {
         this.amount = amount;
         this.type = type;
         this.description = description;
-        this.account = account;
-        id = s_id;
-        s_id++;
+        this.accountId = accountId;
+        this.id = id;
 
-        account.updateBalance(-amount);
+        Account attachedAccount = ManagerFactory.getAccountManager().getAccountById(accountId);
+        attachedAccount.updateBalance(-amount);
 
-        Service.registerLog("new_transaction#amount=" + amount + ";type=" + type.toString() + ";description=" + description + ";account=" + account.getName());
     }
 
     public String getDescription() {
         return description;
     }
 
-    public Account getAccount() {
-        return account;
+    public int getAccountId() {
+        return accountId;
     }
 
     static String getTypesString() {
@@ -61,7 +59,7 @@ public class Transaction {
                 "| Type: " + type.toString() + "\n" +
                 "| Amount: $" + amount + "\n" +
                 "| Description: " + description + "\n" +
-                "| Account: " + account.getName() + "\n" +
+                "| Account: " + ManagerFactory.getAccountManager().getAccountById(accountId).getName() + "\n" +
                 "--------------------------------------------";
     }
 

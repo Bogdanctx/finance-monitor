@@ -1,16 +1,9 @@
-import java.sql.ResultSet;
 import java.util.Scanner;
 
 public class Manager {
     private final Scanner scanner = new Scanner(System.in);
     protected int menuOption;
     protected boolean shouldRun = true;
-
-    public final void unitTest() {
-        //ManagerFactory.getAccountManager().testAccounts();
-        //ManagerFactory.getGoalManager().testGoals();
-        //ManagerFactory.getTransactionManager().testTransaction();
-    }
 
     /////////////////////////////////////
     /// Purpose: Run a manager
