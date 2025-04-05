@@ -1,29 +1,14 @@
 public class Goal implements Comparable<Goal> {
     private String goal;
     private double value;
-    private static int s_id = 0;
     private int id;
-    private Account account = null;
+    private int accountId = -1;
 
-    Goal(String goal, double value) {
+    Goal(int id, String goal, double value, int accountId) {
         this.goal = goal;
         this.value = value;
-
-        id = s_id;
-        s_id++;
-
-        Service.registerLog("new_goal#goal=" + this.goal + ";value=" + this.value);
-    }
-
-    Goal(String goal, double value, Account account) {
-        this.goal = goal;
-        this.value = value;
-        this.account = account;
-
-        id = s_id;
-        s_id++;
-
-        Service.registerLog("new_goal#goal=" + this.goal + ";value=" + this.value + ";account=" + this.account.getName());
+        this.accountId = accountId;
+        this.id = id;
     }
 
     @Override
@@ -34,12 +19,14 @@ public class Goal implements Comparable<Goal> {
     @Override
     public String toString() {
 
-        if(account != null) {
+        if(accountId != -1) {
+            Account attachedAccount = ManagerFactory.getAccountManager().getAccountById(accountId);
+
             return "------------------- GOAL -------------------\n" +
                     "| (ID: " + id + ") \n" +
                     "| Goal: " + goal + "\n" +
-                    "| Target: $" + account.getBalance() + " / $" + value + "\n" +
-                    "| Attached account: " + account.getName() + "\n" +
+                    "| Target: $" + attachedAccount.getBalance() + " / $" + value + "\n" +
+                    "| Attached account: " + attachedAccount.getName() + "\n" +
                     "-------------------------------------------";
         }
 
@@ -57,8 +44,8 @@ public class Goal implements Comparable<Goal> {
 
     }
 
-    public Account getAccount() {
-        return account;
+    public int getAccountId() {
+        return accountId;
     }
 
     public String getGoal() {
@@ -66,8 +53,6 @@ public class Goal implements Comparable<Goal> {
     }
 
     public void setGoal(String goal) {
-        Service.registerLog("set_goal#old_goal=" + this.goal + ";new=" + goal);
-
         this.goal = goal;
     }
 

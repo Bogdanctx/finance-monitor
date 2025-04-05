@@ -48,7 +48,8 @@ public class CSVExportVisitor implements Visitor {
 
         for(Goal g: goalManager.goals)
         {
-            lines.add(g.getGoal() + "," + g.getValue() + "," + g.getAccount().getName());
+            Account account = ManagerFactory.getAccountManager().getAccountById(g.getAccountId());
+            lines.add(g.getGoal() + "," + g.getValue() + "," + account.getName());
         }
 
         Service.writeToFile(file, lines);

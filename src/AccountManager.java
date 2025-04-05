@@ -17,6 +17,15 @@ public class AccountManager extends Manager {
 
     }
 
+    public Account getAccountById(int id) {
+        for(Account account : accounts) {
+            if(account.getId() == id) {
+                return account;
+            }
+        }
+        return null;
+    }
+
     @Override
     protected void NVImenuList() {
         System.out.println("1. Add a new account");
@@ -52,11 +61,13 @@ public class AccountManager extends Manager {
     }
 
     public String getAccountsString() {
+        if(accounts.isEmpty()) {
+            return null;
+        }
+
         StringBuilder accs = new StringBuilder();
-        int index = 0;
         for (Account account: accounts) {
-            accs.append("(").append(index).append(") ").append(account.getName()).append(" | ");
-            index++;
+            accs.append("(").append(account.getId()).append(") ").append(account.getName()).append(" | ");
         }
         return accs.substring(0, accs.length() - 2);
     }

@@ -1,3 +1,4 @@
+import javax.xml.crypto.Data;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -28,16 +29,32 @@ public class Service {
     private Service() {}
 
     public static void loadDataFromDatabase() {
-        ResultSet rs = Database.selectFrom("accounts", "*");
-
         try {
+            ResultSet rs = Database.selectFrom("accounts", "*");
+
             while(rs.next()) {
                 int id = rs.getInt(1);
                 String name = rs.getString(2);
                 double balance = rs.getDouble(3);
+
                 ManagerFactory.getAccountManager().accounts.add(new Account(id, name, balance));
             }
 
+            rs = Database.selectFrom("goals", "*");
+
+            while (rs.next()) {
+                int id = rs.getInt(1);
+                String goalDesc = rs.getString(2);
+                int accountId = rs.getInt(3);
+                double value = rs.getDouble(4);
+
+                // If accountId is NULL
+                if(accountId == 0) {
+                    accountId = -1;
+                }
+
+                ManagerFactory.getGoalManager().goals.add(new Goal(id, goalDesc, value, accountId));
+            }
         }
         catch(Exception e) {
             System.out.println("[ERROR] > " + e);

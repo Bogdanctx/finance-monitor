@@ -31,19 +31,19 @@ public class Database {
     /// This function inserts a row into a table and then return the last ID used as primary key for that row
     /// INSERT INTO @table @valuesOrder VALUES @values;
     public static int insertIntoDatabase(String table, String valuesOrder, String values) {
-        int generatedId = 0;
+        int generatedId = 1;
 
         try {
             String sql = "INSERT INTO " + table + " " + valuesOrder + " VALUES " + values + ";";
 
-            Statement st = connection.createStatement();
-            st.executeUpdate(sql);
+            PreparedStatement pst = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            pst.executeUpdate();
 
-            ResultSet rs = st.getGeneratedKeys();
+            ResultSet rs = pst.getGeneratedKeys();
 
-            rs.next();
-            generatedId = rs.getInt(1);
-
+            if(rs.next()) {
+                generatedId = rs.getInt(1);
+            }
         } catch (SQLException e) {
             System.out.println("[ERROR] > " + e);
         }

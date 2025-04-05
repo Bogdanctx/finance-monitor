@@ -11,7 +11,7 @@ CREATE TABLE accounts (
 CREATE TABLE goals (
     id INT AUTO_INCREMENT PRIMARY KEY,
     goal TEXT NOT NULL,
-    account_id INT NOT NULL,
+    account_id INT DEFAULT NULL,
     value DECIMAL(10,2) NOT NULL,
 
     FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE
