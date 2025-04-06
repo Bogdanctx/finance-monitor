@@ -16,8 +16,8 @@ public class Account {
         return "----------------- ACCOUNT -----------------\n" +
                 "| (ID: " + id + ") \n" +
                 "| Name: " + name + "\n" +
-                "| Balance: " + balance + "\n" +
-                "| Initial Balance: " + initial_balance + "\n" +
+                "| Balance: $" + balance + "\n" +
+                "| Initial Balance: $" + initial_balance + "\n" +
                 "------------------------------------------";
     }
 

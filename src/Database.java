@@ -11,7 +11,7 @@ public class Database {
 
     static {
         try {
-            connection = DriverManager.getConnection(url, "root", "root");
+            connection = DriverManager.getConnection(url, "finance_monitor", "root");
         } catch (SQLException e) {
             System.out.println("[ERROR] > " + e.getMessage());
         }

@@ -78,6 +78,7 @@ public class TransactionManager extends Manager {
 
         System.out.print("Enter additional information: ");
         String description = scanner.next();
+        scanner.nextLine();
 
         System.out.print("Enter account ID [ " + ManagerFactory.getAccountManager().getAccountsString() + " ]: ");
         int account_id = scanner.nextInt();
@@ -95,7 +96,7 @@ public class TransactionManager extends Manager {
     private void removeTransactions() {
         showTransactions();
 
-        System.out.println("Enter the ID of the transaction you would like to remove: ");
+        System.out.print("Enter the ID of the transaction you would like to remove: ");
         int id = scanner.nextInt();
 
         boolean wasDeleted = false;
@@ -123,7 +124,7 @@ public class TransactionManager extends Manager {
 
         System.out.println("1. Show all transactions");
         System.out.println("2. Show transactions by type");
-        System.out.println("Enter your option:");
+        System.out.print("Enter your option:");
         int option = scanner.nextInt();
 
         switch(option) {
