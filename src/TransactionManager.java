@@ -75,10 +75,10 @@ public class TransactionManager extends Manager {
         System.out.print("Enter transaction type [ " + Transaction.getTypesString() + "]: ");
         int index = scanner.nextInt();
         Transaction.TYPE type = Transaction.TYPE.values()[index];
+        scanner.nextLine();
 
         System.out.print("Enter additional information: ");
-        String description = scanner.next();
-        scanner.nextLine();
+        String description = scanner.nextLine();
 
         System.out.print("Enter account ID [ " + ManagerFactory.getAccountManager().getAccountsString() + " ]: ");
         int account_id = scanner.nextInt();

@@ -68,10 +68,10 @@ public class Service {
         try {
             while (rs.next()) {
                 int id = rs.getInt(1);
-                int accountId = rs.getInt(2);
-                Transaction.TYPE type = Transaction.TYPE.valueOf(rs.getString(3));
-                double amount = rs.getDouble(4);
-                String description = rs.getString(5);
+                Transaction.TYPE type = Transaction.TYPE.valueOf(rs.getString(2));
+                double amount = rs.getDouble(3);
+                String description = rs.getString(4);
+                int accountId = rs.getInt(5);
 
                 ManagerFactory.getTransactionManager().transactions.add(new Transaction(id, type, amount, description, accountId));
             }
