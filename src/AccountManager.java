@@ -146,7 +146,9 @@ public class AccountManager extends Manager {
             case 1:
             {
                 System.out.print("Enter new account name: ");
-                String newAccountName = scanner.next();
+                scanner.nextLine();
+                String newAccountName = scanner.nextLine();
+
 
                 account.setName(newAccountName);
 
@@ -163,7 +165,7 @@ public class AccountManager extends Manager {
 
                 account.updateBalance(newFunds);
 
-                Database.updateRow("accounts", "balance = " + account.getBalance() + newFunds, "id = " + account.getId());
+                Database.updateRow("accounts", "balance = " + (account.getBalance() + newFunds), "id = " + account.getId());
 
                 wasUpdated = true;
 

@@ -105,7 +105,14 @@ public class TransactionManager extends Manager {
             if(transactions.get(i).getId() == id) {
                 Service.registerLog("delete_transaction#id=" + transactions.get(i).getId());
 
+                int accountId = transactions.get(i).getAccountId();
+
+                Account account = ManagerFactory.getAccountManager().getAccountById(accountId);
+                account.updateBalance(transactions.get(i).getAmount()); // account_balance = account_balance - (-transaction_balance) = account_balance + transaction_balance
+
+                Database.updateRow("accounts", "balance = " + account.getBalance(), "id = " + accountId);
                 Database.deleteRow("transactions", "id = " + transactions.get(i).getId());
+
                 transactions.remove(i);
 
                 wasDeleted = true;
