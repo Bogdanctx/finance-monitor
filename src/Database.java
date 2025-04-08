@@ -1,3 +1,5 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -6,13 +8,20 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 
 public class Database {
-    private static String url = "jdbc:mysql://localhost:3306/finance_monitor";
     private static Connection connection = null;
 
     static {
         try {
-            connection = DriverManager.getConnection(url, "finance_monitor", "root");
-        } catch (SQLException e) {
+            BufferedReader reader = new BufferedReader(new FileReader("database_conf.txt"));
+
+            String url = reader.readLine();
+            String user = reader.readLine();
+            String password = reader.readLine();
+
+            reader.close();
+
+            connection = DriverManager.getConnection(url, user, password);
+        } catch (Exception e) {
             System.out.println("[ERROR] > " + e.getMessage());
         }
     }
