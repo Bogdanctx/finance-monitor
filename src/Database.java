@@ -1,24 +1,24 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.Properties;
 
 public class Database {
     private static Connection connection = null;
 
     static {
         try {
-            BufferedReader reader = new BufferedReader(new FileReader("database_conf.txt"));
+            FileInputStream fis = new FileInputStream("database_conf.properties");
+            Properties props = new Properties();
+            props.load(fis);
 
-            String url = reader.readLine();
-            String user = reader.readLine();
-            String password = reader.readLine();
-
-            reader.close();
+            String url = props.getProperty("url");
+            String user = props.getProperty("user");
+            String password = props.getProperty("password");
 
             connection = DriverManager.getConnection(url, user, password);
         } catch (Exception e) {
