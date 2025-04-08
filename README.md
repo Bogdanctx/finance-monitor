@@ -25,9 +25,6 @@ A console-based personal finance tracker built in **Java**, designed to help use
 
 ---
 
-
----
-
 ## 🚀 Getting Started
 
 ### 1. Install Dependencies
