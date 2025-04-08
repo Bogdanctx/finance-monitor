@@ -21,7 +21,6 @@ A console-based personal finance tracker built in **Java**, designed to help use
 - **Java 17+**
 - **MySQL**
 - **JDBC**
-- **CSV File Handling**
 
 ---
 
