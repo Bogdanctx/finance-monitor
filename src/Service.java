@@ -87,7 +87,7 @@ public class Service {
     }
 
     public static void clearConsole() {
-        try {
+        /*try {
             if (os.contains("windows")) {
                 new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
             } else {
@@ -95,7 +95,7 @@ public class Service {
             }
         } catch (Exception e) {
             System.out.println("[ERROR] > " + e.getMessage());
-        }
+        }*/
     }
 
     public static File createFile(String fileName) {

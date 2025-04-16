@@ -2,7 +2,6 @@ import java.util.Scanner;
 
 public class ReportManager extends Manager {
     private Visitor[] listOfExports;
-    private final Scanner scanner = new Scanner(System.in);
 
     private enum EXPORT_TYPE {
         CSV,

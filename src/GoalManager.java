@@ -1,10 +1,8 @@
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Scanner;
 
 public class GoalManager extends Manager {
-    private final Scanner scanner = new Scanner(System.in);
     List<Goal> goals = new ArrayList<>();
 
     @Override
@@ -45,7 +43,7 @@ public class GoalManager extends Manager {
 
     private void addGoals() {
         System.out.print("Enter goal: ");
-        String goalText = scanner.next();
+        String goalText = scanner.nextLine();
 
         System.out.print("Enter value: ");
         double goalValue = scanner.nextDouble();
@@ -53,7 +51,7 @@ public class GoalManager extends Manager {
 
         String accountsString = ManagerFactory.getAccountManager().getAccountsString();
 
-        if(accountsString.isEmpty()) {
+        if(accountsString == null) {
             System.out.print("Enter account ID [ (-1) No account ]: ");
         }
         else {
@@ -147,6 +145,7 @@ public class GoalManager extends Manager {
             case 1:
             {
                 System.out.print("Enter new goal description: ");
+                scanner.nextLine();
                 String newGoalText = scanner.nextLine();
 
                 Database.updateRow("goals", "goal = '" + newGoalText + "'", "id = " + goal.getId());

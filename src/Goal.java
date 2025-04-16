@@ -18,9 +18,9 @@ public class Goal implements Comparable<Goal> {
 
     @Override
     public String toString() {
+        Account attachedAccount = ManagerFactory.getAccountManager().getAccountById(account_id);
 
-        if(account_id != -1) {
-            Account attachedAccount = ManagerFactory.getAccountManager().getAccountById(account_id);
+        if(attachedAccount != null) {
 
             return "------------------- GOAL -------------------\n" +
                     "| (ID: " + id + ") \n" +

@@ -1,9 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class AccountManager extends Manager {
-    private final Scanner scanner = new Scanner(System.in);
     List<Account> accounts = new ArrayList<Account>();
 
     public Account getAccountById(int id) {
@@ -58,7 +56,7 @@ public class AccountManager extends Manager {
         for (Account account: accounts) {
             accs.append("(").append(account.getId()).append(") ").append(account.getName()).append(" | ");
         }
-        return accs.substring(0, accs.length() - 2);
+        return accs.substring(0, accs.length() - 3);
     }
 
     public void export(Visitor visitor) {
@@ -68,7 +66,8 @@ public class AccountManager extends Manager {
 
     private void addAccounts() {
         System.out.print("Enter account name: ");
-        String accountName = scanner.next();
+        System.out.flush();
+        String accountName = scanner.nextLine();
 
         System.out.print("Enter account balance: ");
         double accountBalance = scanner.nextDouble();
@@ -127,6 +126,9 @@ public class AccountManager extends Manager {
 
     private void showAccounts() {
         System.out.println("Your accounts:");
+        if(accounts.isEmpty()) {
+            System.out.println("You have no accounts registered.");
+        }
         for(Account account: accounts) {
             System.out.println(account);
         }

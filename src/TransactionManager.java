@@ -1,9 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class TransactionManager extends Manager {
-    private final Scanner scanner = new Scanner(System.in);
     List<Transaction> transactions = new ArrayList<Transaction>();
 
     @Override
@@ -69,6 +67,13 @@ public class TransactionManager extends Manager {
     }
 
     private void addTransactions() {
+        String accountsString = ManagerFactory.getAccountManager().getAccountsString();
+
+        if(accountsString == null) {
+            System.out.println("You don't have any accounts!");
+            return;
+        }
+
         System.out.print("Enter transaction amount: ");
         double amount = scanner.nextDouble();
 
@@ -81,6 +86,7 @@ public class TransactionManager extends Manager {
         String description = scanner.nextLine();
 
         System.out.print("Enter account ID [ " + ManagerFactory.getAccountManager().getAccountsString() + " ]: ");
+
         int account_id = scanner.nextInt();
 
         int transactionId = Database.insertIntoDatabase("transactions", "(type,amount,description,account_id)",
@@ -108,9 +114,12 @@ public class TransactionManager extends Manager {
                 int accountId = transactions.get(i).getAccountId();
 
                 Account account = ManagerFactory.getAccountManager().getAccountById(accountId);
-                account.updateBalance(transactions.get(i).getAmount()); // account_balance = account_balance - (-transaction_balance) = account_balance + transaction_balance
 
-                Database.updateRow("accounts", "balance = " + account.getBalance(), "id = " + accountId);
+                if(account != null) {
+                    account.updateBalance(transactions.get(i).getAmount()); // account_balance = account_balance - (-transaction_balance) = account_balance + transaction_balance
+                    Database.updateRow("accounts", "balance = " + account.getBalance(), "id = " + accountId);
+                }
+
                 Database.deleteRow("transactions", "id = " + transactions.get(i).getId());
 
                 transactions.remove(i);

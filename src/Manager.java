@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class Manager {
-    private final Scanner scanner = new Scanner(System.in);
+    protected final Scanner scanner = new Scanner(System.in);
     protected int menuOption;
     protected boolean shouldRun = true;
 
@@ -31,6 +31,7 @@ public class Manager {
 
         System.out.print("Enter your choice: ");
         menuOption = scanner.nextInt();
+        scanner.nextLine();
 
         handleMenuOption(menuOption);
     }

@@ -54,6 +54,18 @@ public class Transaction {
 
     @Override
     public String toString() {
+        Account account = ManagerFactory.getAccountManager().getAccountById(account_id);
+
+        if(account == null) {
+            return "---------------- TRANSACTION ----------------\n" +
+                    "| (ID: " + id + ") \n" +
+                    "| Type: " + type.toString() + "\n" +
+                    "| Amount: $" + amount + "\n" +
+                    "| Description: " + description + "\n" +
+                    "| Account: No account attached.\n" +
+                    "--------------------------------------------";
+        }
+
         return "---------------- TRANSACTION ----------------\n" +
                 "| (ID: " + id + ") \n" +
                 "| Type: " + type.toString() + "\n" +
