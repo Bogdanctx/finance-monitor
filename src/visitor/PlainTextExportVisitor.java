@@ -1,3 +1,14 @@
+package visitor;
+
+import controller.AccountController;
+import controller.ControllerFactory;
+import controller.GoalController;
+import controller.TransactionController;
+import entity.Account;
+import entity.Goal;
+import entity.Service;
+import entity.Transaction;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -5,19 +16,19 @@ import java.util.List;
 public class PlainTextExportVisitor implements Visitor {
 
     @Override
-    public void visitManager() {
+    public void visitREST() {
         final File file = Service.createFile("REPORT.txt");
         List<String> lines = new ArrayList<>();
 
-        for(Transaction t: ManagerFactory.getTransactionManager().transactions) {
+        for(Transaction t: ControllerFactory.transactionController.getTransactions()) {
             lines.add(t.toString());
         }
 
-        for(Account a: ManagerFactory.getAccountManager().accounts) {
+        for(Account a: ControllerFactory.accountController.getAccounts()) {
             lines.add(a.toString());
         }
 
-        for(Goal g: ManagerFactory.getGoalManager().goals) {
+        for(Goal g: ControllerFactory.goalController.getGoals()) {
             lines.add(g.toString());
         }
 
@@ -25,11 +36,12 @@ public class PlainTextExportVisitor implements Visitor {
     }
 
     @Override
-    public void visitAccountManager(AccountManager accountManager) {
+    public void visitAccountController(AccountController accountController) {
         final File file = Service.createFile("ACCOUNTS.txt");
         List<String> lines = new ArrayList<>();
 
-        for(Account acc: accountManager.accounts)
+
+        for(Account acc: accountController.getAccounts())
         {
             lines.add(acc.toString());
         }
@@ -38,11 +50,11 @@ public class PlainTextExportVisitor implements Visitor {
     }
 
     @Override
-    public void visitTransactionManager(TransactionManager transactionManager) {
+    public void visitTransactionController(TransactionController transactionController) {
         final File file = Service.createFile("TRANSACTIONS.txt");
         List<String> lines = new ArrayList<>();
 
-        for(Transaction t: transactionManager.transactions)
+        for(Transaction t: transactionController.getTransactions())
         {
             lines.add(t.toString());
         }
@@ -51,11 +63,11 @@ public class PlainTextExportVisitor implements Visitor {
     }
 
     @Override
-    public void visitGoalManager(GoalManager goalManager) {
+    public void visitGoalController(GoalController goalController) {
         final File file = Service.createFile("GOALS.txt");
         List<String> lines = new ArrayList<>();
 
-        for(Goal g: goalManager.goals)
+        for(Goal g: goalController.getGoals())
         {
             lines.add(g.toString());
         }

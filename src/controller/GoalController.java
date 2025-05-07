@@ -1,9 +1,24 @@
+package controller;
+
+import database.Database;
+import entity.Goal;
+import entity.Service;
+import visitor.Visitor;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class GoalManager extends Manager {
-    List<Goal> goals = new ArrayList<>();
+public class GoalController extends REST {
+    private List<Goal> goals = new ArrayList<>();
+
+    public List<Goal> getGoals() {
+        return goals;
+    }
+
+    public void addGoal(Goal g) {
+        goals.add(g);
+    }
 
     @Override
     protected void NVImenuList() {
@@ -30,46 +45,61 @@ public class GoalManager extends Manager {
             case 2 -> removeGoals();
             case 3 -> updateGoals();
             case 4 -> showGoals();
-            case 0 -> {
-                shouldRun = false;
-                Service.clearConsole();
-            }
+            case 0 -> shouldRun = false;
         }
     }
 
     public void export(Visitor visitor) {
-        visitor.visitGoalManager(this);
+        visitor.visitGoalController(this);
     }
 
     private void addGoals() {
+        String accountsString = ControllerFactory.accountController.getAccountsString();
+
+        if(accountsString == null) {
+            System.out.println("You have no accounts! An account is required to create a goal!");
+            return;
+        }
+
         System.out.print("Enter goal: ");
         String goalText = scanner.nextLine();
 
+        if(goalText.isEmpty()) {
+            System.out.println("Goal description can't be empty!");
+            return;
+        }
+
         System.out.print("Enter value: ");
-        double goalValue = scanner.nextDouble();
-        scanner.nextLine();
+        Double goalValue = Service.readDouble(scanner);
 
-        String accountsString = ManagerFactory.getAccountManager().getAccountsString();
-
-        if(accountsString == null) {
-            System.out.print("Enter account ID [ (-1) No account ]: ");
+        if(goalValue == null) {
+            System.out.println("Invalid number");
+            return;
         }
-        else {
-            System.out.print("Enter account ID [ (-1) No account | " + ManagerFactory.getAccountManager().getAccountsString() + " ]: ");
+        if(goalValue <= 0) {
+            System.out.println("Invalid value");
+            return;
         }
 
-        int accountID = scanner.nextInt();
+        System.out.print("Enter account ID [ " + ControllerFactory.accountController.getAccountsString() + " ]: ");
+
+        Integer accountID = Service.readInt(scanner);
+
+        if(accountID == null) {
+            System.out.println("Invalid ID");
+            return;
+        }
 
         int databaseKey;
 
-        if(accountID == -1) { // No account attached to this goal
-            String values = String.format("('%s',%.2f)", goalText, goalValue);
-            databaseKey = Database.insertIntoDatabase("goals", "(goal,value)", values);
+        if(ControllerFactory.accountController.getAccountById(accountID) == null) {
+            System.out.println("Invalid account ID");
+            return;
         }
-        else { // An account has been attached to this goal
-            String values = String.format("('%s', %.2f, %d)", goalText, goalValue, accountID);
-            databaseKey = Database.insertIntoDatabase("goals", "(goal,value,account_id)", values);
-        }
+
+        String values = String.format("('%s', %.2f, %d)", goalText, goalValue, accountID);
+        databaseKey = Database.insertIntoDatabase("goals", "(goal,value,account_id)", values);
+
 
         goals.add(new Goal(databaseKey, goalText, goalValue, accountID));
 
@@ -77,9 +107,22 @@ public class GoalManager extends Manager {
     }
 
     private void removeGoals() {
-        showGoals();
+        if(ControllerFactory.goalController.getGoals().isEmpty()) {
+            System.out.println("You don't have any goals!");
+            return;
+        }
+
+        for(Goal goal: goals) {
+            System.out.println(goal);
+        }
+
         System.out.print("Enter the ID of the goal to be deleted: ");
-        int id = scanner.nextInt();
+        Integer id = Service.readInt(scanner);
+
+        if(id == null) {
+            System.out.println("Invalid value");
+            return;
+        }
 
         boolean wasDeleted = false;
 
@@ -104,8 +147,19 @@ public class GoalManager extends Manager {
 
     private void updateGoals() {
         showGoals();
+
+        if(ControllerFactory.goalController.getGoals().isEmpty()) {
+            System.out.println("You don't have any goals!");
+            return;
+        }
+
         System.out.print("Enter the ID of the goal to be updated: ");
-        int id = scanner.nextInt();
+        Integer id = Service.readInt(scanner);
+
+        if(id == null) {
+            System.out.println("Invalid value");
+            return;
+        }
 
         boolean wasFound = false;
         for (Goal goal : goals) {
@@ -125,6 +179,11 @@ public class GoalManager extends Manager {
 
         List<Goal> sortedGoals = new ArrayList<>(List.copyOf(goals));
 
+        if(sortedGoals.isEmpty()) {
+            System.out.println("You don't have any goals");
+            return;
+        }
+
         sortedGoals.sort(Comparator.comparingDouble(Goal::getValue).reversed());
 
         for(Goal goal: sortedGoals) {
@@ -138,15 +197,25 @@ public class GoalManager extends Manager {
         System.out.println("1. Update goal text");
         System.out.println("2. Update goal value");
         System.out.print("Enter your choice: ");
-        int choice;
-        choice = scanner.nextInt();
+
+        Integer choice = Service.readInt(scanner);
+
+        if(choice == null) {
+            System.out.println("Invalid value");
+            return;
+        }
 
         switch(choice) {
             case 1:
             {
                 System.out.print("Enter new goal description: ");
-                scanner.nextLine();
                 String newGoalText = scanner.nextLine();
+
+                if(newGoalText.isEmpty()) {
+                    System.out.println("Goal description can't be empty");
+                    return;
+                }
+
 
                 Database.updateRow("goals", "goal = '" + newGoalText + "'", "id = " + goal.getId());
                 Service.registerLog("set_goal#old_goal=" + goal.getGoal() + ";new=" + newGoalText);
@@ -159,21 +228,29 @@ public class GoalManager extends Manager {
             case 2:
             {
                 System.out.print("Enter new goal value: ");
-                double newGoalValue = scanner.nextDouble();
+                Double newGoalValue = Service.readDouble(scanner);
 
-                if(newGoalValue < 0) {
+                if(newGoalValue == null) {
+                    System.out.println("Invalid value");
+                    return;
+                }
+
+                if(newGoalValue <= 0) {
                     System.out.println("Invalid value.");
+                    return;
                 }
-                else {
-                    Database.updateRow("goals", "value = '" + newGoalValue + "'", "id = " + goal.getId());
-                    Service.registerLog("set_goal#old_value=" + goal.getValue() + ";new=" + newGoalValue);
-                    goal.setValue(newGoalValue);
 
-                    wasUpdated = true;
-                }
+                Database.updateRow("goals", "value = '" + newGoalValue + "'", "id = " + goal.getId());
+                Service.registerLog("set_goal#old_value=" + goal.getValue() + ";new=" + newGoalValue);
+                goal.setValue(newGoalValue);
+
+                wasUpdated = true;
 
                 break;
             }
+
+            default:
+                System.out.println("Invalid choice");
         }
 
         if(wasUpdated) {

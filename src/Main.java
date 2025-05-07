@@ -1,8 +1,16 @@
+import controller.ControllerFactory;
+import controller.REST;
+import database.Database;
+
 public class Main {
     public static void main(String[] args) {
-        Manager manager = ManagerFactory.getMainManager();
-        Service.loadDataFromDatabase();
+        ControllerFactory controllers = new ControllerFactory();
+        Database.connect();
+        Database.setControllers(controllers);
+        Database.loadData();
 
-        manager.run();
+        REST rest = new REST();
+
+        rest.run();
     }
 }

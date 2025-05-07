@@ -1,12 +1,17 @@
+package controller;
+
+import entity.Service;
+import visitor.Visitor;
+
 import java.util.Scanner;
 
-public class Manager {
+public class REST {
     protected final Scanner scanner = new Scanner(System.in);
-    protected int menuOption;
+    protected Integer menuOption;
     protected boolean shouldRun = true;
 
     /////////////////////////////////////
-    /// Purpose: Run a manager
+    /// Purpose: Run the controller
     /////////////////////////////////////
     public final void run() {
         shouldRun = true;
@@ -17,7 +22,7 @@ public class Manager {
     }
 
     ///////////////////////////////////////////////
-    /// Each class that inherits Manager can override render() in case of custom text printing
+    /// Each class that inherits RestController can override render() in case of custom text printing
     //////////////////////////////////////////////
     protected void render() {
         displayMenu();
@@ -30,18 +35,22 @@ public class Manager {
         NVImenuList();
 
         System.out.print("Enter your choice: ");
-        menuOption = scanner.nextInt();
-        scanner.nextLine();
+        menuOption = Service.readInt(scanner);
+
+        if(menuOption == null) {
+            System.out.println("Invalid choice");
+            return;
+        }
 
         handleMenuOption(menuOption);
     }
 
     public void export(Visitor visitor) {
-        visitor.visitManager();
+        visitor.visitREST();
     }
 
     /////////////////////////////////////////////////////////////
-    /// Each class that inherits Manager must override NVImenuList() with a custom menu
+    /// Each class that inherits RestController must override NVImenuList() with a custom menu
     /////////////////////////////////////////////////////////////
     protected void NVImenuList() {
         System.out.println("1. Manage goals");
@@ -57,34 +66,31 @@ public class Manager {
         {
             case 1: // Manage goals
             {
-                ManagerFactory.getGoalManager().run();
-
+                ControllerFactory.goalController.run();
                 break;
             }
             case 2: // Manage accounts
             {
-                ManagerFactory.getAccountManager().run();
-
+                ControllerFactory.accountController.run();
                 break;
             }
             case 3: // Manage transactions
             {
-                ManagerFactory.getTransactionManager().run();
-
+                ControllerFactory.transactionController.run();
                 break;
             }
             case 4: // Generate a report
             {
-                ManagerFactory.getReportManager().run();
-
+                ControllerFactory.reportController.run();
                 break;
             }
             case 0:
             {
                 shouldRun = false;
-
                 break;
             }
+            default:
+                System.out.println("Invalid input");
         }
     }
 }

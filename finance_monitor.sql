@@ -4,8 +4,7 @@ USE finance_monitor;
 CREATE TABLE accounts (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
-    balance DECIMAL(10,2) NOT NULL,
-    initial_balance DECIMAL(10,2) NOT NULL
+    balance DECIMAL(10,2) NOT NULL
 );
 
 CREATE TABLE goals (

@@ -1,8 +1,25 @@
+package controller;
+
+import entity.Account;
+import entity.Goal;
+import entity.Service;
+import visitor.Visitor;
+import database.Database;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-public class AccountManager extends Manager {
+public class AccountController extends REST {
     List<Account> accounts = new ArrayList<Account>();
+
+    public List<Account> getAccounts() {
+        return accounts;
+    }
+
+    public void addAccount(Account a) {
+        accounts.add(a);
+    }
 
     public Account getAccountById(int id) {
         for(Account account : accounts) {
@@ -39,10 +56,7 @@ public class AccountManager extends Manager {
             case 2 -> removeAccounts();
             case 3 -> updateAccounts();
             case 4 -> showAccounts();
-            case 0 -> {
-                shouldRun = false;
-                Service.clearConsole();
-            }
+            case 0 -> shouldRun = false;
         }
 
     }
@@ -60,46 +74,73 @@ public class AccountManager extends Manager {
     }
 
     public void export(Visitor visitor) {
-        visitor.visitAccountManager(this);
+        visitor.visitAccountController(this);
     }
 
 
     private void addAccounts() {
         System.out.print("Enter account name: ");
-        System.out.flush();
         String accountName = scanner.nextLine();
 
-        System.out.print("Enter account balance: ");
-        double accountBalance = scanner.nextDouble();
-        scanner.nextLine();
+        if(accountName.isEmpty()) {
+            System.out.println("An account must have a name");
+            return;
+        }
 
-        String values = String.format("('%s', %.2f, %.2f)", accountName, accountBalance, accountBalance);
-        int id = Database.insertIntoDatabase("accounts", "(name, balance, initial_balance)", values);
+        System.out.print("Enter account balance: ");
+        Double accountBalance = Service.readDouble(scanner);
+        if(accountBalance == null) {
+            System.out.println("Invalid number");
+            return;
+        }
+
+        String values = String.format("('%s', %.2f)", accountName, accountBalance);
+        int id = Database.insertIntoDatabase("accounts", "(name, balance)", values);
 
         accounts.add(new Account(id, accountName, accountBalance));
         Service.registerLog("new_account#name=" + accountName + ";balance=" + accountBalance);
     }
 
     private void removeAccounts() {
-        showAccounts();
+        for(Account account: accounts) {
+            System.out.println(account);
+        }
+
+        if(accounts.isEmpty()) {
+            System.out.println("You don't have any accounts!");
+            return;
+        }
+
         System.out.print("Enter the ID of the account to be deleted: ");
-        int id = scanner.nextInt();
+        Integer id = Service.readInt(scanner);
+
+        if(id == null) {
+            System.out.println("Invalid ID");
+            return;
+        }
 
         boolean wasDeleted = false;
 
-        for(int i = 0; i < accounts.size(); i++) {
-            if(accounts.get(i).getId() == id) {
-                Service.registerLog("delete_account#name=" + accounts.get(i).getName());
+        for (int i = accounts.size() - 1; i >= 0; i--) {
+            if (accounts.get(i).getId() == id) {
 
+                Iterator<Goal> iterator = ControllerFactory.goalController.getGoals().iterator();
+                while (iterator.hasNext()) {
+                    Goal goal = iterator.next();
+                    if (goal.getAccountId() == accounts.get(i).getId()) {
+                        iterator.remove();
+                    }
+                }
+
+                Service.registerLog("delete_account#name=" + accounts.get(i).getName());
                 Database.deleteRow("accounts", "name = '" + accounts.get(i).getName() + "'");
                 accounts.remove(i);
-
                 wasDeleted = true;
             }
         }
 
         if(wasDeleted) {
-            System.out.println("The account with ID #" + id + " was deleted.");
+            System.out.println("The account with ID #" + id + " and all associated goals were deleted.");
         }
         else {
             System.out.println("Unable to find account with ID #" + id + ".");
@@ -107,9 +148,22 @@ public class AccountManager extends Manager {
     }
 
     private void updateAccounts() {
-        showAccounts();
+        for(Account account: accounts) {
+            System.out.println(account);
+        }
+
+        if(accounts.isEmpty()) {
+            System.out.println("You don't have any accounts!");
+            return;
+        }
+
         System.out.print("Enter the ID of the account to be updated: ");
-        int id = scanner.nextInt();
+
+        Integer id = Service.readInt(scanner);
+        if(id == null) {
+            System.out.println("Invalid ID");
+            return;
+        }
 
         boolean wasFound = false;
         for (Account account: accounts) {
@@ -127,7 +181,7 @@ public class AccountManager extends Manager {
     private void showAccounts() {
         System.out.println("Your accounts:");
         if(accounts.isEmpty()) {
-            System.out.println("You have no accounts registered.");
+            System.out.println("You don't have accounts.");
         }
         for(Account account: accounts) {
             System.out.println(account);
@@ -141,21 +195,27 @@ public class AccountManager extends Manager {
         System.out.println("2. Add/Remove funds to account");
         System.out.println("3. Set balance of an account");
         System.out.print("Enter your choice: ");
-        int choice;
-        choice = scanner.nextInt();
+
+        Integer choice = Service.readInt(scanner);
+
+        if(choice == null) {
+            System.out.println("Invalid choice");
+            return;
+        }
 
         switch(choice) {
             case 1:
             {
                 System.out.print("Enter new account name: ");
-                scanner.nextLine();
                 String newAccountName = scanner.nextLine();
 
+                if(newAccountName.isEmpty()) {
+                    System.out.println("Account name can't be empty.");
+                    return;
+                }
 
                 account.setName(newAccountName);
-
                 Database.updateRow("accounts", "name = '" + newAccountName + "'", "id = " + account.getId());
-
                 wasUpdated = true;
 
                 break;
@@ -163,12 +223,15 @@ public class AccountManager extends Manager {
             case 2:
             {
                 System.out.print("Enter amount of funds to add or remove: ");
-                double newFunds = scanner.nextDouble();
+                Double newFunds = Service.readDouble(scanner);
+
+                if(newFunds == null) {
+                    System.out.println("Invalid value");
+                    return;
+                }
 
                 account.updateBalance(newFunds);
-
                 Database.updateRow("accounts", "balance = " + (account.getBalance() + newFunds), "id = " + account.getId());
-
                 wasUpdated = true;
 
                 break;
@@ -176,12 +239,15 @@ public class AccountManager extends Manager {
             case 3:
             {
                 System.out.print("Enter new balance: ");
-                double newBalance = scanner.nextDouble();
+                Double newBalance = Service.readDouble(scanner);
+
+                if(newBalance == null) {
+                    System.out.println("Invalid value");
+                    return;
+                }
 
                 account.setBalance(newBalance);
-
-                Database.updateRow("accounts", "balance = " + newBalance + ", initial_balance = " + newBalance, "id = " + account.getId());
-
+                Database.updateRow("accounts", "balance = " + newBalance, "id = " + account.getId());
                 wasUpdated = true;
 
                 break;

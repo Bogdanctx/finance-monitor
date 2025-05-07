@@ -1,10 +1,16 @@
+package entity;
+
+import controller.ControllerFactory;
+
+import java.lang.module.Configuration;
+
 public class Goal implements Comparable<Goal> {
     private int id;
     private String goal;
     private double value;
     private int account_id = -1;
 
-    Goal(int id, String goal, double value, int account_id) {
+    public Goal(int id, String goal, double value, int account_id) {
         this.goal = goal;
         this.value = value;
         this.account_id = account_id;
@@ -18,28 +24,13 @@ public class Goal implements Comparable<Goal> {
 
     @Override
     public String toString() {
-        Account attachedAccount = ManagerFactory.getAccountManager().getAccountById(account_id);
-
-        if(attachedAccount != null) {
-
-            return "------------------- GOAL -------------------\n" +
-                    "| (ID: " + id + ") \n" +
-                    "| Goal: " + goal + "\n" +
-                    "| Target: $" + attachedAccount.getBalance() + " / $" + value + "\n" +
-                    "| Attached account: " + attachedAccount.getName() + "\n" +
-                    "-------------------------------------------";
-        }
-
-        double moneyInAccounts = 0;
-        for(Account account: ManagerFactory.getAccountManager().accounts) {
-            moneyInAccounts += account.getBalance();
-        }
+        Account attachedAccount = ControllerFactory.accountController.getAccountById(account_id);
 
         return "------------------- GOAL -------------------\n" +
                 "| (ID: " + id + ") \n" +
                 "| Goal: " + goal + "\n" +
-                "| Target: $" + moneyInAccounts + " / $" + value + " ($" + moneyInAccounts + " from all accounts)\n" +
-                "| Attached account: No account attached\n" +
+                "| Target: $" + attachedAccount.getBalance() + " / $" + value + "\n" +
+                "| Attached account: " + attachedAccount.getName() + "\n" +
                 "-------------------------------------------";
 
     }

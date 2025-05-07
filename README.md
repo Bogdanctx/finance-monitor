@@ -31,7 +31,7 @@ A console-based personal finance tracker built in **Java**, designed to help use
 - Java (17 or higher)
 - MySQL
 
-### 2. Set Up Database
+### 2. Set Up database.Database
 
 Run the SQL script named `finance_monitor.sql`.
 

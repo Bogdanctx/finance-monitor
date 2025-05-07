@@ -1,8 +1,20 @@
+package controller;
+
+import database.Database;
+import entity.Account;
+import entity.Service;
+import entity.Transaction;
+import visitor.Visitor;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransactionManager extends Manager {
+public class TransactionController extends REST {
     List<Transaction> transactions = new ArrayList<Transaction>();
+
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
 
     @Override
     protected void NVImenuList() {
@@ -11,6 +23,10 @@ public class TransactionManager extends Manager {
         System.out.println("3. Show transactions");
         System.out.println("4. Show statistics");
         System.out.println("0. Exit");
+    }
+
+    public void addTransaction(Transaction t) {
+        transactions.add(t);
     }
 
     @Override
@@ -29,16 +45,14 @@ public class TransactionManager extends Manager {
             case 2 -> removeTransactions();
             case 3 -> showTransactions();
             case 4 -> showStatistics();
-            case 0 -> {
-                shouldRun = false;
-                Service.clearConsole();
-            }
+            case 0 -> shouldRun = false;
+            default -> System.out.println("Invalid choice");
         }
     }
 
     @Override
     public void export(Visitor visitor) {
-        visitor.visitTransactionManager(this);
+        visitor.visitTransactionController(this);
     }
 
     private void showStatistics() {
@@ -66,8 +80,8 @@ public class TransactionManager extends Manager {
         }
     }
 
-    private void addTransactions() {
-        String accountsString = ManagerFactory.getAccountManager().getAccountsString();
+    public void addTransactions() {
+        String accountsString = ControllerFactory.accountController.getAccountsString();
 
         if(accountsString == null) {
             System.out.println("You don't have any accounts!");
@@ -75,19 +89,44 @@ public class TransactionManager extends Manager {
         }
 
         System.out.print("Enter transaction amount: ");
-        double amount = scanner.nextDouble();
+        Double amount = Service.readDouble(scanner);
+
+        if(amount == null) {
+            System.out.println("Invalid value");
+            return;
+        }
 
         System.out.print("Enter transaction type [ " + Transaction.getTypesString() + "]: ");
-        int index = scanner.nextInt();
+        Integer index = Service.readInt(scanner);
+
+        if(index == null) {
+            System.out.println("Invalid type");
+            return;
+        }
+
+        if(index < 0 || index >= Transaction.TYPE.values().length) {
+            System.out.println("Invalid type");
+            return;
+        }
+
         Transaction.TYPE type = Transaction.TYPE.values()[index];
-        scanner.nextLine();
 
         System.out.print("Enter additional information: ");
         String description = scanner.nextLine();
 
-        System.out.print("Enter account ID [ " + ManagerFactory.getAccountManager().getAccountsString() + " ]: ");
+        System.out.print("Enter account ID [ " + ControllerFactory.accountController.getAccountsString() + " ]: ");
 
-        int account_id = scanner.nextInt();
+        Integer account_id = Service.readInt(scanner);
+
+        if(ControllerFactory.accountController.getAccountById(account_id) == null) {
+            System.out.println("Invalid account ID");
+            return;
+        }
+
+        if(account_id == null) {
+            System.out.println("Invalid ID");
+            return;
+        }
 
         int transactionId = Database.insertIntoDatabase("transactions", "(type,amount,description,account_id)",
                                                         String.format("('%s',%.2f,'%s',%d)", type.toString(), amount, description, account_id));
@@ -96,14 +135,26 @@ public class TransactionManager extends Manager {
         Service.registerLog("new_transaction#amount=" + amount +
                             ";type=" + Transaction.TYPE.values()[index].toString() +
                             ";description=" + description +
-                            ";account=" + ManagerFactory.getAccountManager().getAccountById(account_id).getName());
+                            ";account=" + ControllerFactory.accountController.getAccountById(account_id).getName());
     }
 
-    private void removeTransactions() {
-        showTransactions();
+    public void removeTransactions() {
+        for(Transaction transaction: transactions) {
+            System.out.println(transaction);
+        }
 
-        System.out.print("Enter the ID of the transaction you would like to remove: ");
-        int id = scanner.nextInt();
+        if(transactions.isEmpty()) {
+            System.out.println("You don't have any transactions!");
+            return;
+        }
+
+        System.out.print("Enter the ID of the transaction you want to remove: ");
+        Integer id = Service.readInt(scanner);
+
+        if(id == null) {
+            System.out.println("Invalid ID");
+            return;
+        }
 
         boolean wasDeleted = false;
 
@@ -113,7 +164,7 @@ public class TransactionManager extends Manager {
 
                 int accountId = transactions.get(i).getAccountId();
 
-                Account account = ManagerFactory.getAccountManager().getAccountById(accountId);
+                Account account = ControllerFactory.accountController.getAccountById(accountId);
 
                 if(account != null) {
                     account.updateBalance(transactions.get(i).getAmount()); // account_balance = account_balance - (-transaction_balance) = account_balance + transaction_balance
@@ -141,7 +192,12 @@ public class TransactionManager extends Manager {
         System.out.println("1. Show all transactions");
         System.out.println("2. Show transactions by type");
         System.out.print("Enter your option:");
-        int option = scanner.nextInt();
+        Integer option = Service.readInt(scanner);
+
+        if(option == null) {
+            System.out.println("Invalid choice");
+            return;
+        }
 
         switch(option) {
             case 1:
@@ -157,7 +213,17 @@ public class TransactionManager extends Manager {
             case 2:
             {
                 System.out.print("Enter transaction type [ " + Transaction.getTypesString() + "]: ");
-                int index = scanner.nextInt();
+                Integer index = Service.readInt(scanner);
+
+                if(index == null) {
+                    System.out.println("Invalid type");
+                    return;
+                }
+
+                if(index < 0 || index >= Transaction.TYPE.values().length) {
+                    System.out.println("Invalid transaction type");
+                    return;
+                }
 
                 Transaction.TYPE[] types = Transaction.TYPE.values();
 
@@ -171,6 +237,8 @@ public class TransactionManager extends Manager {
 
                 break;
             }
+            default:
+                System.out.println("Invalid choice");
         }
     }
 }

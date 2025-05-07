@@ -1,3 +1,7 @@
+package entity;
+
+import controller.ControllerFactory;
+
 public class Transaction {
     private int id;
     private TYPE type;
@@ -18,14 +22,14 @@ public class Transaction {
         Other
     }
 
-    Transaction(int id, TYPE type, double amount, String description, int account_id) {
+    public Transaction(int id, TYPE type, double amount, String description, int account_id) {
         this.amount = amount;
         this.type = type;
         this.description = description;
         this.account_id = account_id;
         this.id = id;
 
-        Account attachedAccount = ManagerFactory.getAccountManager().getAccountById(account_id);
+        Account attachedAccount = ControllerFactory.accountController.getAccountById(account_id);
         attachedAccount.updateBalance(-amount);
 
     }
@@ -38,7 +42,7 @@ public class Transaction {
         return account_id;
     }
 
-    static String getTypesString() {
+    public static String getTypesString() {
         String types = "";
         int index = 0;
         for (TYPE type : TYPE.values()) {
@@ -54,7 +58,7 @@ public class Transaction {
 
     @Override
     public String toString() {
-        Account account = ManagerFactory.getAccountManager().getAccountById(account_id);
+        Account account = ControllerFactory.accountController.getAccountById(account_id);
 
         if(account == null) {
             return "---------------- TRANSACTION ----------------\n" +
@@ -71,7 +75,7 @@ public class Transaction {
                 "| Type: " + type.toString() + "\n" +
                 "| Amount: $" + amount + "\n" +
                 "| Description: " + description + "\n" +
-                "| Account: " + ManagerFactory.getAccountManager().getAccountById(account_id).getName() + "\n" +
+                "| Account: " + ControllerFactory.accountController.getAccountById(account_id).getName() + "\n" +
                 "--------------------------------------------";
     }
 
