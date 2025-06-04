@@ -1,9 +1,10 @@
 package controller;
 
-import database.Database;
 import entity.Account;
 import entity.Service;
 import entity.Transaction;
+import repositories.AccountRepository;
+import repositories.TransactionRepository;
 import visitor.Visitor;
 
 import java.util.ArrayList;
@@ -118,7 +119,7 @@ public class TransactionController extends REST {
 
         Integer account_id = Service.readInt(scanner);
 
-        if(ControllerFactory.accountController.getAccountById(account_id) == null) {
+        if(account_id == null || ControllerFactory.accountController.getAccountById(account_id) == null) {
             System.out.println("Invalid account ID");
             return;
         }
@@ -128,8 +129,7 @@ public class TransactionController extends REST {
             return;
         }
 
-        int transactionId = Database.insertIntoDatabase("transactions", "(type,amount,description,account_id)",
-                                                        String.format("('%s',%.2f,'%s',%d)", type.toString(), amount, description, account_id));
+        int transactionId = TransactionRepository.insertTransaction(type.toString(), amount, description, account_id);
         transactions.add(new Transaction(transactionId, type, amount, description, account_id));
 
         Service.registerLog("new_transaction#amount=" + amount +
@@ -168,11 +168,10 @@ public class TransactionController extends REST {
 
                 if(account != null) {
                     account.updateBalance(transactions.get(i).getAmount()); // account_balance = account_balance - (-transaction_balance) = account_balance + transaction_balance
-                    Database.updateRow("accounts", "balance = " + account.getBalance(), "id = " + accountId);
+                    AccountRepository.updateBalance(account.getBalance(), accountId);
                 }
 
-                Database.deleteRow("transactions", "id = " + transactions.get(i).getId());
-
+                TransactionRepository.removeTransaction(transactions.get(i).getId());
                 transactions.remove(i);
 
                 wasDeleted = true;

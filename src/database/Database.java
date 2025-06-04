@@ -4,6 +4,9 @@ import controller.ControllerFactory;
 import entity.Account;
 import entity.Goal;
 import entity.Transaction;
+import repositories.AccountRepository;
+import repositories.GoalRepository;
+import repositories.TransactionRepository;
 
 import javax.xml.crypto.Data;
 import java.io.FileInputStream;
@@ -50,7 +53,7 @@ public class Database {
     }
 
     private static void loadAccountsFromDB() {
-        ResultSet rs = Database.selectFrom("accounts", "*");
+        ResultSet rs = AccountRepository.getAccounts();
 
         try {
             while (rs.next()) {
@@ -66,7 +69,7 @@ public class Database {
     }
 
     private static void loadTransactionsFromDB() {
-        ResultSet rs = selectFrom("transactions", "*");
+        ResultSet rs = TransactionRepository.getTransactions();
 
         try {
             while (rs.next()) {
@@ -84,7 +87,7 @@ public class Database {
     }
 
     private static void loadGoalsFromDB() {
-        ResultSet rs = Database.selectFrom("goals", "*");
+        ResultSet rs = GoalRepository.getGoals();
 
         try {
             while (rs.next()) {
@@ -99,63 +102,4 @@ public class Database {
             e.printStackTrace();
         }
     }
-
-    public static ResultSet selectFrom(String table, String values) {
-        ResultSet rs = null;
-
-        try {
-            rs = connection.createStatement().executeQuery("SELECT " + values + " FROM " + table + ";");
-        } catch (SQLException e) {
-            System.out.println("[ERROR] > " + e);
-        }
-
-        return rs;
-    }
-
-    /// This function inserts a row into a table and then return the last ID used as primary key for that row
-    /// INSERT INTO @table @valuesOrder VALUES @values;
-    public static int insertIntoDatabase(String table, String valuesOrder, String values) {
-        int generatedId = 1;
-
-        try {
-            String sql = "INSERT INTO " + table + " " + valuesOrder + " VALUES " + values + ";";
-
-            PreparedStatement pst = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            pst.executeUpdate();
-
-            ResultSet rs = pst.getGeneratedKeys();
-
-            if(rs.next()) {
-                generatedId = rs.getInt(1);
-            }
-        } catch (SQLException e) {
-            System.out.println("[ERROR] > " + e);
-        }
-
-        return generatedId;
-    }
-
-    public static void updateRow(String table, String newValues, String whereClause) {
-        try {
-            String sql = "UPDATE " + table + " SET " + newValues + " WHERE " + whereClause + ";";
-
-            Statement st = connection.createStatement();
-            st.executeUpdate(sql);
-
-        } catch (SQLException e) {
-            System.out.println("[ERROR] > " + e);
-        }
-    }
-
-    public static void deleteRow(String table, String whereClause) {
-        String sql = "DELETE FROM " + table + " WHERE " + whereClause;
-
-        try {
-            Statement st = connection.createStatement();
-            st.executeUpdate(sql);
-        } catch (SQLException e) {
-            System.out.println("[ERROR] > " + e);
-        }
-    }
-
 }

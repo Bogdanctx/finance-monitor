@@ -3,8 +3,8 @@ package controller;
 import entity.Account;
 import entity.Goal;
 import entity.Service;
+import repositories.AccountRepository;
 import visitor.Visitor;
-import database.Database;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -89,13 +89,12 @@ public class AccountController extends REST {
 
         System.out.print("Enter account balance: ");
         Double accountBalance = Service.readDouble(scanner);
-        if(accountBalance == null) {
+        if(accountBalance == null || accountBalance <= 0) {
             System.out.println("Invalid number");
             return;
         }
 
-        String values = String.format("('%s', %.2f)", accountName, accountBalance);
-        int id = Database.insertIntoDatabase("accounts", "(name, balance)", values);
+        int id = AccountRepository.insertAccount(accountName, accountBalance);
 
         accounts.add(new Account(id, accountName, accountBalance));
         Service.registerLog("new_account#name=" + accountName + ";balance=" + accountBalance);
@@ -133,7 +132,7 @@ public class AccountController extends REST {
                 }
 
                 Service.registerLog("delete_account#name=" + accounts.get(i).getName());
-                Database.deleteRow("accounts", "name = '" + accounts.get(i).getName() + "'");
+                AccountRepository.removeAccount(accounts.get(i).getId());
                 accounts.remove(i);
                 wasDeleted = true;
             }
@@ -215,7 +214,7 @@ public class AccountController extends REST {
                 }
 
                 account.setName(newAccountName);
-                Database.updateRow("accounts", "name = '" + newAccountName + "'", "id = " + account.getId());
+                AccountRepository.updateName(newAccountName, account.getId());
                 wasUpdated = true;
 
                 break;
@@ -231,7 +230,7 @@ public class AccountController extends REST {
                 }
 
                 account.updateBalance(newFunds);
-                Database.updateRow("accounts", "balance = " + (account.getBalance() + newFunds), "id = " + account.getId());
+                AccountRepository.updateBalance(account.getBalance() + newFunds, account.getId());
                 wasUpdated = true;
 
                 break;
@@ -247,7 +246,7 @@ public class AccountController extends REST {
                 }
 
                 account.setBalance(newBalance);
-                Database.updateRow("accounts", "balance = " + newBalance, "id = " + account.getId());
+                AccountRepository.updateBalance(newBalance, account.getId());
                 wasUpdated = true;
 
                 break;

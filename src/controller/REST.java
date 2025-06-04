@@ -10,9 +10,6 @@ public class REST {
     protected Integer menuOption;
     protected boolean shouldRun = true;
 
-    /////////////////////////////////////
-    /// Purpose: Run the controller
-    /////////////////////////////////////
     public final void run() {
         shouldRun = true;
 
@@ -21,9 +18,6 @@ public class REST {
         }
     }
 
-    ///////////////////////////////////////////////
-    /// Each class that inherits RestController can override render() in case of custom text printing
-    //////////////////////////////////////////////
     protected void render() {
         displayMenu();
     }
@@ -49,9 +43,6 @@ public class REST {
         visitor.visitREST();
     }
 
-    /////////////////////////////////////////////////////////////
-    /// Each class that inherits RestController must override NVImenuList() with a custom menu
-    /////////////////////////////////////////////////////////////
     protected void NVImenuList() {
         System.out.println("1. Manage goals");
         System.out.println("2. Manage accounts");

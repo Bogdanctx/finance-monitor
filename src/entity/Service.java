@@ -16,8 +16,6 @@ import java.util.Scanner;
 
 public class Service {
     private static File logs = null;
-    private final static String os = System.getProperty("os.name").toLowerCase();
-
 
     static {
         logs = createFile("LOGS.csv");

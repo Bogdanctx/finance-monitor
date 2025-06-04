@@ -36,10 +36,6 @@ public class ReportController extends REST {
     @Override
     protected void handleMenuOption(int option)
     {
-        if(option == 0) {
-            shouldRun = false;
-        }
-
         switch (option)
         {
             case 0: {

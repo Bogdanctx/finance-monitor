@@ -1,8 +1,8 @@
 package controller;
 
-import database.Database;
 import entity.Goal;
 import entity.Service;
+import repositories.GoalRepository;
 import visitor.Visitor;
 
 import java.util.ArrayList;
@@ -90,19 +90,14 @@ public class GoalController extends REST {
             return;
         }
 
-        int databaseKey;
-
         if(ControllerFactory.accountController.getAccountById(accountID) == null) {
             System.out.println("Invalid account ID");
             return;
         }
 
-        String values = String.format("('%s', %.2f, %d)", goalText, goalValue, accountID);
-        databaseKey = Database.insertIntoDatabase("goals", "(goal,value,account_id)", values);
-
+        int databaseKey = GoalRepository.insertGoal(goalText, goalValue, accountID);
 
         goals.add(new Goal(databaseKey, goalText, goalValue, accountID));
-
         Service.registerLog("new_goal#goal=" + goalText + ";value=" + goalValue);
     }
 
@@ -130,7 +125,7 @@ public class GoalController extends REST {
             if(goals.get(i).getId() == id) {
                 Service.registerLog("delete_goal#description=" + goals.get(i).getGoal());
 
-                Database.deleteRow("goals", "id = " + goals.get(i).getId());
+                GoalRepository.removeGoal(goals.get(i).getId());
                 goals.remove(i);
 
                 wasDeleted = true;
@@ -194,7 +189,7 @@ public class GoalController extends REST {
     private void updateGoal(Goal goal) {
         boolean wasUpdated = false;
 
-        System.out.println("1. Update goal text");
+        System.out.println("1. Update goal description");
         System.out.println("2. Update goal value");
         System.out.print("Enter your choice: ");
 
@@ -209,17 +204,16 @@ public class GoalController extends REST {
             case 1:
             {
                 System.out.print("Enter new goal description: ");
-                String newGoalText = scanner.nextLine();
+                String newDescription = scanner.nextLine();
 
-                if(newGoalText.isEmpty()) {
+                if(newDescription.isEmpty()) {
                     System.out.println("Goal description can't be empty");
                     return;
                 }
 
-
-                Database.updateRow("goals", "goal = '" + newGoalText + "'", "id = " + goal.getId());
-                Service.registerLog("set_goal#old_goal=" + goal.getGoal() + ";new=" + newGoalText);
-                goal.setGoal(newGoalText);
+                GoalRepository.updateDescription(goal.getId(), newDescription);
+                Service.registerLog("set_goal#old_goal=" + goal.getGoal() + ";new=" + newDescription);
+                goal.setGoal(newDescription);
 
                 wasUpdated = true;
 
@@ -240,7 +234,7 @@ public class GoalController extends REST {
                     return;
                 }
 
-                Database.updateRow("goals", "value = '" + newGoalValue + "'", "id = " + goal.getId());
+                GoalRepository.updateValue(goal.getId(), newGoalValue);
                 Service.registerLog("set_goal#old_value=" + goal.getValue() + ";new=" + newGoalValue);
                 goal.setValue(newGoalValue);
 
